@@ -1,0 +1,286 @@
+---
+title: "Assignment-1"
+author: "Tushar Sharma"
+Roll No:"25040208013"
+---
+
+Demonstration of different types of operators taught in Class
+
+```{r}
+# ARITHMETIC OPERATORS
+# Using variables a1 and b1 for arithmetic operations
+
+a1 <- 10
+b1 <- 3
+
+print(a1 + b1)   # Addition
+print(a1 - b1)   # Subtraction
+print(a1 * b1)   # Multiplication
+print(a1 / b1)   # Division
+print(a1 %% b1)  # Remainder
+print(a1 %/% b1) # Integer division
+print(a1 ^ b1)   # Power
+
+```
+
+```{r}
+# COMPARISON (RELATIONAL) OPERATORS
+# Using variables c1 and d1 for comparison operations
+
+c1 <- 8
+d1 <- 5
+
+print(c1 > d1)   # Greater than
+print(c1 < d1)   # Less than
+print(c1 == d1)  # Equal to
+print(c1 != d1)  # Not equal to
+print(c1 >= d1)  # Greater than or equal to
+print(c1 <= d1)  # Less than or equal to
+
+
+```
+
+```{r}
+# LOGICAL OPERATORS
+# Using logical variables l1 and l2
+
+l1 <- TRUE
+l2 <- FALSE
+
+print(l1 & l2)   # Logical AND
+print(l1 | l2)   # Logical OR
+print(!l1)       # Logical NOT
+
+```
+
+```{r}
+# ASSIGNMENT OPERATORS
+# Demonstrating different assignment operators
+
+x1 <- 5
+print(x1)
+
+x2 = 10
+print(x2)
+
+15 -> x3
+print(x3)
+
+```
+
+```{r}
+#Vector used
+
+# Created a vector Apple that contain diffrent types of appel
+apple<-c('red','green','yellow','cotton')
+print(apple)
+
+#class Shows that what kind of data is present in the particular vector
+print(class(apple))     
+
+```
+
+```{r}
+# MISCELLANEOUS OPERATORS
+# Sequence operator (:)
+print(1:5)
+
+#  operator (%in%)
+items <- c(2, 4, 6, 8)
+print(4 %in% items)
+print(8 %in% items)
+```
+
+```{r}
+# VECTOR OPERATIONS
+# Creating numeric vectors and performing various operations
+
+
+v1 <- c(1, 2, 3, 4)
+v2 <- c(10, 20, 30, 40)
+
+# Arithmetic operations (element-wise)
+print(v1 + v2)   # Vector addition
+print(v1 * v2)   # Vector multiplication
+print(v2 - v1)   # Vector subtraction
+print(v2 / v1)   # Vector division
+
+# Comparison operations on vectors
+print(v1 > 2)    # Greater than comparison
+print(v1 <= v2)  # Vector-to-vector comparison
+
+# Mathematical functions on vectors
+print(sum(v1))       # Sum of elements
+print(mean(v2))      # Mean of elements
+print(max(v2))       # Maximum value
+print(min(v1))       # Minimum value
+print(length(v1))    # Number of elements
+
+# Indexing and subsetting vectors
+print(v1[1])         # First element
+print(v2[2:4])       # Elements from index 2 to 4
+print(v1[-1])        # All elements except first
+
+# Conditional subsetting
+print(v2[v2 > 20])           # Elements greater than 20
+print(v1[v1 %% 2 == 0])      # Even numbers from v1
+
+# Sorting vectors
+print(sort(v2))                      # Ascending order
+print(sort(v2, decreasing = TRUE))   # Descending order
+
+# Combining and repeating vectors
+v3 <- c(v1, v2)
+print(v3)
+
+```
+
+```{r}
+# List is an R-object which can contain different types of elements
+# like vectors, numbers, functions and even another list
+# Creating first list
+
+list_A <- list(numbers = c(10, 20, 30),name = "Tushar",passed = TRUE)
+
+print(list_A)
+
+# Creating second list
+list_B <- list(marks = c(70, 75, 80),age = 21
+)
+
+print(list_B)
+
+# Accessing elements from list
+
+print(list_A[[1]])        # Access by position
+print(list_A$name)        # Access by name
+print(list_B$marks)
+
+# Modifying elements in list
+
+list_A$name <- "Tushar Sharma"
+print(list_A)
+
+list_B$age <- 22
+print(list_B)
+
+# Adding new elements to list
+
+list_A$grade <- "A"
+print(list_A)
+
+list_B$result <- TRUE
+print(list_B)
+
+# Length of lists
+
+print(length(list_A))
+print(length(list_B))
+
+# Combining two lists
+
+combined_list <- c(list_A, list_B)
+print(combined_list)
+
+# List inside list (nested list)
+
+final_list <- list(personal_details = list_A,academic_details = list_B)
+
+print(final_list)
+
+# Removing an element from list
+
+list_A$passed <- NULL
+print(list_A)
+
+```
+
+```{r}
+#Matrix is a two dimensional vector
+
+#learning how to define a matrix
+M=matrix(c('a','a','b','c','b','a'),nrow=2,ncol=3,byrow=TRUE)
+print(M)
+
+#Some operation on matrices
+
+M1=matrix(c(1,0,0,0,1,0,0,0,1),nrow=3,ncol=3,byrow=TRUE)
+print(M1)
+
+print(dim(M1))      # Dimensions (rows, columns)
+print(nrow(M1))     # Number of rows
+print(ncol(M1))     # Number of columns
+
+
+# Accessing matrix elements
+print(M1[1, 1])     # Element at row 1, column 1
+print(M1[2, ])      # Entire 2nd row
+print(M1[, 3])      # Entire 3rd column
+
+# Matrix arithmetic operations
+
+M2 <- matrix( c(2, 2, 2, 1, 1, 1,3, 3, 3),nrow = 3,ncol=3,byrow = TRUE)
+
+print(M2)
+
+print(M1 + M2)      # Matrix addition
+print(M2 - M1)      # Matrix subtraction
+print(M1 * M2)      # Element-wise multiplication
+
+# Matrix multiplication
+print(M1 %*% M2)    # Proper matrix multiplication
+
+
+# Transpose of a matrix
+
+print(t(M2))
+
+# Diagonal, determinant and identity check
+
+print(diag(M1))     # Diagonal elements
+print(det(M1))      # Determinant of matrix
+```
+
+```{r}
+
+```
+
+```{r}
+# FACTOR – TYPES OF SPORTS PLAYED BY STUDENTS
+sports_played <- c("Football","Handball","Volleyball","Cricket","basketball ","khokho")
+sport_factor <- factor(sports_played)
+print(sport_factor)
+
+
+```
+
+```{r}
+# SEMESTER 1 MARKS TABLE 
+# Creating a structured table for Semester 1 marks
+
+sem1_marks <- data.frame(
+  Subject_Code = c("MDSC-101", "MDSC-102", "MDSC-103", "MDSC-104", "MDSC-105"),
+  Subject_Name = c(
+    "Applied Linear Algebra",
+    "Inferential Statistics",
+    "Optimization Techniques",
+    "Computer Organization and Architecture",
+    "Design and Analysis of Algorithms"
+  ),
+  Grade_Point = c(8.0, 7.0, 8.0, 8.0, 9.0)
+)
+
+print(sem1_marks)
+
+# A simple use case of the list structure
+
+student_record <- list(
+  student_name = "Tushar Sharma",
+  roll_no = 25040208013,
+  semester = "Semester 1",
+  marks_table = sem1_marks,
+  passed = TRUE
+)
+
+print(student_record)
+```

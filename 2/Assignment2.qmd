@@ -1,0 +1,820 @@
+---
+title: "Assignment-2"
+author: "Tushar Sharma"
+format: pdf
+editor: visual
+---
+
+**Conditional statements**
+
+1.  if Statement
+
+```{r}
+x <- 10
+if(x > 5){
+print("x is greater than 5")
+}
+```
+
+```{r}
+n <- 7
+if(n %% 2 == 1){
+print("Number is odd")
+}
+```
+
+```{r}
+marks <- 80
+if(marks >= 35){
+print("Student passed")
+}
+```
+
+```{r}
+age <- 20
+if(age >= 18){
+print("Eligible to vote")
+}
+```
+
+```{r}
+temp <- 30
+if(temp > 25){
+print("Weather is hot")
+}
+```
+
+2.  if--else Statement
+
+```{r}
+x <- 4
+if(x %% 2 == 0){
+print("Even number")
+} else {
+print("Odd number")
+}
+```
+
+```{r}
+marks <- 30
+if(marks >= 35){
+print("Pass")
+} else {
+print("Fail")
+}
+```
+
+```{r}
+age <- 16
+if(age >= 18){
+print("Adult")
+} else {
+print("Minor")
+}
+```
+
+```{r}
+num <- -5
+if(num > 0){
+print("Positive number")
+} else {
+print("Negative number")
+}
+```
+
+```{r}
+balance = 15000
+if(balance >= 1000){
+print("Sufficient balance")
+} else {
+print("Low balance")
+}
+```
+
+3.  if--else if--else Statement
+
+```{r}
+marks <- 85
+if(marks >= 90){
+print("Grade A")
+} else if(marks >= 75){
+print("Grade B")
+} else {
+print("Grade C")
+}
+```
+
+```{r}
+num <- 0
+if(num > 0){
+print("Positive")
+} else if(num < 0){
+print("Negative")
+} else {
+print("Zero")
+}
+```
+
+```{r}
+day <- "Sunday"
+if(day == "Monday"){
+print("Working day")
+} else if(day == "Sunday"){
+print("Holiday")
+} else {
+print("Normal day")
+}
+```
+
+```{r}
+temp <- 15
+if(temp > 30){
+print("Hot")
+} else if(temp >= 20){
+print("Warm")
+} else {
+print("Cold")
+}
+```
+
+```{r}
+speed <- 90
+if(speed > 100){
+print("Overspeeding")
+} else if(speed >= 60){
+print("Normal speed")
+} else {
+print("Slow speed")
+}
+```
+
+**LOOPING STATEMENTS**
+
+1.  while Loop
+
+```{r}
+i <- 1
+while(i <= 5){
+print(i)
+i <- i + 1
+}
+```
+
+```{r}
+i <- 2
+while(i <= 10){
+print(i)
+i <- i + 2
+}
+```
+
+```{r}
+i <- 5
+while(i >= 1){
+print(i)
+i <- i - 1
+}
+```
+
+```{r}
+count <- 1
+while(count <= 3){
+print("Hello")
+count <- count + 1
+}
+```
+
+2.  repeat Loop
+
+```{r}
+repeat{
+print("Executed once")
+break
+}
+
+```
+
+```{r}
+n <- 1
+repeat{
+print(n^3)
+n <- n + 1
+if(n > 4) break
+}
+```
+
+```{r}
+x <- 10
+repeat{
+print(x)
+x <- x - 2
+if(x <= 0) break
+}
+```
+
+```{r}
+count <- 1
+repeat{
+print("Loop running")
+count <- count + 1
+if(count == 4) break
+}
+```
+
+```{r}
+i <- 1
+repeat{
+print(i)
+i <- i + 1
+if(i > 5) break
+}
+```
+
+6.  for Loop
+
+```{r}
+for(i in 1:5){
+  square <- i * i
+  print(paste("Square of", i, "is", square))
+}
+```
+
+```{r}
+for(i in 1:6){
+  if(i %% 2 == 0){
+    print(paste(i, "is Even"))
+  } else {
+    print(paste(i, "is Odd"))
+  }
+}
+```
+
+**Functions in R**
+
+1.  Built-in Functions
+
+```{r}
+
+print(sum(1:10))
+
+print(max(c(5, 12, 9, 3)))
+
+print(min(c(15, 7, 20, 4)))
+
+print(mean(10:20))
+
+print(length(c(2, 4, 6, 8, 10)))
+
+```
+
+2.  User defined Function with Argument
+
+```{r}
+#Square of a number
+square <- function(x){
+  return(x * x)
+}
+print(square(5))
+```
+
+```{r}
+# Addition of two numbers
+add <- function(a, b){
+  return(a + b)
+}
+print(add(10, 20))
+```
+
+```{r}
+#Area of rectangle
+areaRectangle <- function(l, b){
+  return(l * b)
+}
+print(areaRectangle(5, 4))
+```
+
+```{r}
+#Cube of a number
+cube <- function(n){
+  return(n^3)
+}
+print(cube(3))
+```
+
+```{r}
+#Check even or odd
+evenOdd <- function(n){
+  if(n %% 2 == 0){
+    return("Even")
+  } else {
+    return("Odd")
+  }
+}
+print(evenOdd(7))
+```
+
+3.  Function without argument
+
+```{r}
+display <- function(){
+  print("Welcome to R Programming")
+}
+display()
+```
+
+```{r}
+numbers <- function(){
+  for(i in 1:5){
+    print(i)
+  }
+}
+numbers()
+```
+
+```{r}
+showSquare <- function(){
+  for(i in 1:4){
+    print(i^2)
+  }
+}
+showSquare()
+```
+
+```{r}
+message <- function(){
+  print("This is a user defined function")
+}
+message()
+```
+
+```{r}
+simple <- function(){
+  print("Function executed successfully")
+}
+simple()
+```
+
+4.  Funcitons with default argument
+
+```{r}
+multiply <- function(a = 5, b = 2){
+  print(a * b)
+}
+multiply()
+```
+
+```{r}
+multiply(4, 3)
+```
+
+```{r}
+power <- function(x = 2){
+  print(x^2)
+}
+power()
+```
+
+```{r}
+power(5)
+```
+
+5.  Lazy evaluation of function
+
+```{r}
+lazy <- function(a, b){
+  print(a^2)
+}
+lazy(4)
+```
+
+**Strings\
+**
+
+```{r}
+# String creation
+a <- "Hello"
+b <- 'R Programming'
+c <- "Learning Strings"
+d <- "I'm learning R"
+e <- 'Data Science'
+
+print(a)
+print(b)
+print(c)
+print(d)
+print(e)
+
+# paste() function
+print(paste("Hello", "World"))
+print(paste("R", "Programming", sep = "-"))
+print(paste("Data", "Science", sep = ""))
+print(paste("Score is", 95))
+print(paste("Welcome", "to", "R"))
+
+# String functions
+print(nchar("Programming"))
+print(toupper("r language"))
+print(tolower("DATA SCIENCE"))
+print(substring("Programming", 1, 4))
+print(format(123.4567, nsmall = 2))
+
+```
+
+Date: 21-01-2026
+
+## Charts and Graphs in R
+
+```{r}
+#pie chart
+slices <- c(10,20,30,40)
+labels <- c("A","B","C","D")
+pie(slices,labels=labels,main = "1st example")
+```
+
+#### Another pie chart with percentage
+
+```{r}
+pct <- round(slices/sum(slices)*100)
+labels_pct <- paste(lables,pct,"%")
+pie(slices,lables=labels_pct,main="2nd with ex. with %")
+```
+
+```{r}
+marks <- c(10, 20, 30, 40)
+labels <- c("Fail", "Pass", "Second", "First")
+
+pie(marks,
+    labels = labels,
+    main = "Result Distribution")
+```
+
+```{r}
+students <- c(50, 30, 20)
+labels <- c("Hostel", "", "PG")
+
+pie(students,
+    labels = labels,
+    col = c("skyblue", "lightgreen", "pink"),
+    radius = 1,
+    main = "Student Residence Type")
+
+
+```
+
+```{r}
+hours <- c(8, 5, 3, 4)
+labels <- c("Sleep", "Study", "College", "Sports")
+
+colors <- c("skyblue", "lightgreen", "orange", "pink", "yellow")
+
+pie(hours,
+    labels = labels,
+    col = colors,
+    main = "Daily Time Distribution")
+
+```
+
+```{r}
+
+
+install.packages("plotrix")  
+library(plotrix)
+
+hours <- c(8, 5, 3, 4)
+labels <- c("Sleep", "Study", "College", "Sports")
+
+colors <- c("skyblue", "lightgreen", "orange", "pink")
+
+pie3D(hours,
+      labels = labels,
+      col = colors,
+      explode = c(0, 0.25, 0, 0),   # Study highlighted
+      main = "Daily Time Distribution (3D Pie Chart)")
+
+```
+
+#### Bar Graphs
+
+```{r}
+subjects <- c("Statistics", "ML", "NLP", "Python", "R")
+marks <- c(18, 22, 20, 25, 15)
+
+barplot(marks,
+        names.arg = subjects,
+        col = "skyblue",
+        main = "Internal Marks by Subject",
+        ylab = "Marks (out of 30)",
+        xlab = "Subjects")
+
+text(x = seq_along(marks),
+     y = marks,
+     labels = marks,
+     pos = 3)
+```
+
+```{r}
+activities <- c("Study", "Sleep", "Sports")
+hours <- c(6, 8, 2)
+
+barplot(hours,
+        names.arg = activities,
+        col = c("orange", "skyblue", "pink"),
+        main = "Daily Activities",
+        ylab = "Hours")
+
+```
+
+```{r}
+
+
+days <- c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+hours <- c(3, 4, 2, 5, 4, 6, 2)
+
+max_index <- which.max(hours)
+
+colors <- rep("lightgray", length(hours))
+colors[max_index] <- "darkgreen"
+
+barplot(hours,
+        names.arg = days,
+        col = colors,
+        main = "Study Hours During the Week",
+        ylab = "Hours",
+        xlab = "Days")
+
+text(x = seq_along(hours),
+     y = hours,
+     labels = hours,
+     pos = 3)
+
+```
+
+```{r}
+subjects <- c("Statistics", "ML", "NLP", "Python", "R", "AI")
+marks <- c(68, 72, 70, 75, 65, 73)
+
+bp <- barplot(marks,
+              names.arg = subjects,
+              col = "lightblue",
+              ylim = c(0, 80),
+              main = "Marks in Different Subjects",
+              ylab = "Marks")
+
+text(x = bp,
+     y = marks,
+     labels = marks,
+     pos = 3)
+
+grid(nx = NA, ny = NULL)
+
+
+```
+
+```{r}
+activities <- c("play ", "study")
+
+weekday <- c(3, 1)
+weekend <- c(5, 3)
+
+hours <- rbind(weekday, weekend)
+
+barplot(hours,
+        beside = TRUE,
+        col = c("lightgreen", "pink"),
+        names.arg = activities,
+        main = "Weekday vs Weekend")
+
+legend("topleft",
+       legend = c("Weekday", "Weekend"),
+       fill = c("lightgreen", "pink"))
+
+```
+
+#USing DATA FRAMES
+
+```{r}
+# data frame
+marks_df <- data.frame(
+  Subject = c("Statistics", "ML", "NLP", "Python", "R", "AI"),
+  Marks   = c(68, 72, 70, 75, 65, 73)
+)
+
+View(marks_df)
+
+```
+
+```{r}
+barplot(marks_df$Marks,
+        names.arg = marks_df$Subject,
+        ylim = c(0, 100),
+              main = "Marks in Different Subjects",
+              ylab = "Marks")
+
+text(x = bp,
+     y = marks,
+     labels = marks,
+     pos = 3)
+
+grid(nx = NA, ny = NULL)
+
+```
+
+#### BoxPlots
+
+```{r}
+stats <- c(65, 70, 72, 68, 75)
+ml    <- c(60, 62, 65, 70, 68)
+python<- c(55, 58, 60, 63, 65)
+
+data <- list(Statistics = stats,
+             ML = ml,
+             Python = python)
+
+boxplot(data,
+        col = c("skyblue", "lightgreen", "pink"),
+        main = "Marks Distribution of Subjects",
+        ylab = "Marks")
+```
+
+```{r}
+group1 <- c(150, 152, 155, 158, 160)
+group2 <- c(155, 158, 160, 162, 165)
+group3 <- c(160, 162, 165, 168, 170)
+
+boxplot(group1, group2, group3,
+        names = c("Group A", "Group B", "Group C"),
+        col = c("skyblue", "lightgreen", "pink"),
+        main = "Height Distribution",
+        ylab = "Height (cm)")
+```
+
+```{r}
+week1 <- c(200, 250, 300, 350, 400)
+week2 <- c(300, 350, 400, 450, 500)
+
+boxplot(week1, week2,
+        names = c("Week 1", "Week 2"),
+        col = c("violet", "gold"),
+        main = "Pocket Money Comparison",
+        ylab = "Amount (INR)")
+
+grid()
+```
+
+#### Histograms
+
+```{r}
+marks <- c(45, 50, 55, 60, 62, 65, 68, 70, 72, 75)
+
+hist(marks,
+     main = "Histogram of Marks",
+     xlab = "Marks")
+
+```
+
+```{r}
+hist(marks,
+     col = "skyblue",
+     border = "yellow",
+     main = "Histogram of Marks",
+     xlab = "Marks")
+```
+
+```{r}
+set.seed(123)
+data<- rnorm(100)
+hist(data,main = "Normal Distribution")
+
+```
+
+```{r}
+set.seed(123)
+
+data <- rnorm(100)
+
+hist(data,
+     freq = FALSE,
+     col = "skyblue",
+     border = "darkblue",
+     main = "Normal Distribution with Density Curve",
+     xlab = "Values")
+
+lines(density(data),
+      col = "black",
+      lwd = 2)
+
+```
+
+```{r}
+plot(marks,
+     type = "o",
+     col = "blue",
+     pch = 16,
+     main = "Marks Trend",
+     xlab = "Subjects",
+     ylab = "Marks")
+
+```
+
+```{r}
+study_hours <- c(2, 3, 4, 3, 5)
+play_hours  <- c(1, 2, 1, 2, 1)
+
+plot(study_hours,
+     type = "o",
+     col = "green",
+     ylim = c(0, 6),
+     xaxt = "n",
+     main = "Daily Activity Comparison",
+     xlab = "Days",
+     ylab = "Hours")
+
+lines(play_hours,
+      type = "o",
+      col = "blue")
+
+axis(1, at = 1:5, labels = c("Mon", "Tue", "Wed", "Thu", "Fri"))
+
+legend("topleft",
+       legend = c("Play", "study"),
+       col = c("blue", "green"),
+       lty = 1,
+       pch = 16)
+
+```
+
+### Data set used
+
+```{r}
+#Dataset Load & View
+data(mtcars)
+View(mtcars)
+#command for a data sets 
+str(mtcars)
+summary(mtcars)
+head(mtcars)
+```
+
+```{r}
+hist(mtcars$mpg,
+     col = "skyblue",
+     border = "black",
+     main = "Mileage Distribution (mpg)",
+     xlab = "Miles per Gallon")
+
+```
+
+```{r}
+hist(mtcars$mpg,
+     freq = FALSE,
+     col = "lightgreen",
+     border = "black",
+     main = "Mileage Distribution with Density Curve",
+     xlab = "Miles per Gallon")
+
+lines(density(mtcars$mpg),
+      col = "red",
+      lwd = 2)
+
+```
+
+```{r}
+cyl_count <- table(mtcars$cyl)
+
+barplot(cyl_count,
+        col = "orange",
+        main = "Number of Cars by Cylinders",
+        xlab = "Cylinders",
+        ylab = "Count")
+
+```
+
+```{r}
+boxplot(mpg ~ cyl,
+        data = mtcars,
+        col = c("skyblue", "lightgreen", "pink"),
+        main = "Mileage vs Cylinders",
+        xlab = "Cylinders",
+        ylab = "Miles per Gallon")
+
+```
+
+```{r}
+plot(mtcars$mpg,
+     type = "o",
+     col = "blue",
+     main = "Mileage of Cars",
+     xlab = "Car Index",
+     ylab = "Miles per Gallon")
+
+```
+
+```{r}
+plot(mtcars$wt, mtcars$mpg,
+     col = "red",
+     pch = 16,
+     main = "Mileage vs Weight",
+     xlab = "Weight",
+     ylab = "Miles per Gallon")
+
+```
