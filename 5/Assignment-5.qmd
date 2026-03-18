@@ -1,0 +1,332 @@
+---
+title: "Assignmnet-5"
+author: "Tushar Sharma - 25040208013"
+format: pdf
+editor: visual
+---
+
+# Learning Data transformation with dplyr
+
+#### Dplyr-
+
+-   Pick observations by their values (filter()).
+
+-   Reorder the rows (arrange()).
+
+-   Pick variables by their names (select()).
+
+-   Create new variables with functions of existing variables (mutate()).
+
+-   Collapse many values down to a single summary (summarize())
+
+```{r}
+library(tidyverse)
+library(nycflights13)
+library(dplyr)
+```
+
+### Filter Rows with Filter()
+
+```{r}
+#Filter helps to select all flights on January 1st
+filter(flights,month==1,day==1)
+```
+
+#### We can store this filter data in some variable
+
+```{r}
+jan1 <- filter(flights, month == 1, day == 1)
+```
+
+#### Along with storing in a variable we can same time print it also by *wrap the assignment in parentheses*
+
+```{r}
+(dec25 <- filter(flights, month == 12, day == 25))
+```
+
+### Logical Operators
+
+#### In filter(), multiple conditions use AND by default, so all must be TRUE.
+
+#### Use & for and, \| for or, and ! for not.
+
+![](images/Screenshot%202026-02-11%20145606.png)
+
+### Filtering Flights for November or December
+
+To filter rows for multiple values, we must explicitly compare the column each time.
+
+```{r}
+# Correct way: explicitly compare month to both values
+# month == 11 | month == 12 ensures each condition is checked separately
+filter(flights, month == 11 | month == 12)
+
+```
+
+```{r}
+# Better way: %in% checks if month belongs to the given vector
+# This is cleaner and avoids logical confusion
+nov_dec <- filter(flights, month %in% c(11, 12))
+
+```
+
+### Missing Values
+
+-   `NA` represents a missing or unknown value in R.
+
+-   Any operation involving `NA` usually returns `NA` because the value is unknown.
+
+##### 1. Operation with NA
+
+```{r}
+# Comparisons with NA return NA
+print(NA > 5)
+print(10 == NA)
+print(NA + 10)
+print(NA / 2)
+
+```
+
+##### 2. Comparing NA with NA
+
+```{r}
+# NA is not equal to NA because both values are unknown
+print(NA == NA)
+
+```
+
+##### 3. Using Variables with NA
+
+```{r}
+# Example with unknown values
+x <- NA
+y <- NA
+
+print(x == y)   # We don't know if they are equal
+```
+
+##### 4. Checking Missing Values using is.na()
+
+```{r}
+# is.na() checks whether a value is missing
+print(is.na(x))
+```
+
+## Filtering with NA using dplyr
+
+-   `filter()` only keeps rows where the condition is TRUE.\
+    It removes both FALSE and NA values.
+
+#### 5. Filtering Without Including NA
+
+```{r}
+df <- tibble(x = c(1, NA, 3))
+
+# This excludes NA because NA > 1 is unknown
+filter(df, x > 1)
+```
+
+```{r}
+# Explicitly include missing departure delays
+filter(flights, is.na(dep_delay) | dep_delay > 60)
+
+```
+
+#### Missing values - sorted at the end:
+
+```{r}
+df <- tibble(x= c(5,2,NA))
+arrange(df,x)
+```
+
+#### Select Columns with select()
+
+```{r}
+# Select columns by name
+select(flights, year, month, day)
+```
+
+```{r}
+# Select all columns between year and day (inclusive)
+select(flights, year:day)
+```
+
+```{r}
+# Select all columns except those from year to day (inclusive)
+select(flights, -(year:day))
+```
+
+### Add New Variables with mutate()
+
+```{r}
+flights_sml <- select(flights,
+year:day,
+ends_with("delay"),
+distance,
+air_time
+)
+mutate(flights_sml,
+gain = arr_delay - dep_delay,
+speed = distance / air_time * 60
+)
+```
+
+```{r}
+#Note that you can refer to columns that you’ve just created:
+mutate(flights_sml,
+gain = arr_delay - dep_delay,
+hours = air_time / 60,
+gain_per_hour = gain / hours
+)
+```
+
+```{r}
+#If you only want to keep the new variables, use transmute():
+transmute(flights,
+gain = arr_delay - dep_delay,
+hours = air_time / 60,
+gain_per_hour = gain / hours
+)
+```
+
+### Grouped Summaries with summarize()
+
+```{r}
+summarize(flights, delay = mean(dep_delay, na.rm = TRUE))
+```
+
+#### summarize() are more usefull when we pair it with group_by()
+
+```{r}
+by_day <- group_by(flights, year, month, day)
+summarize(by_day, delay = mean(dep_delay, na.rm = TRUE))
+```
+
+## Combining Multiple Operations with Pipe
+
+The pipe `%>%` is used to perform multiple operations in sequence.\
+It makes the code easier to read from top to bottom.
+
+##### `%>%` can be read as “then”
+
+-   how it looks without pipe
+
+```{r}
+by_dest <- group_by(flights, dest)
+
+delay <- summarize(by_dest,
+                   count = n(),
+                   dist = mean(distance, na.rm = TRUE),
+                   delay = mean(arr_delay, na.rm = TRUE))
+
+delay <- filter(delay, count > 20, dest != "HNL")
+
+ggplot(delay, aes(x = dist, y = delay)) +
+  geom_point(aes(size = count), alpha = 1/3) +
+  geom_smooth(se = FALSE)
+```
+
+### With Pipe
+
+The pipe passes the result of one step to the next.
+
+```{r}
+delays <- flights %>%
+  group_by(dest) %>%
+  summarize(
+    count = n(),
+    dist = mean(distance, na.rm = TRUE),
+    delay = mean(arr_delay, na.rm = TRUE)
+  ) %>%
+  filter(count > 20, dest != "HNL")
+
+ggplot(delays, aes(x = dist, y = delay)) +
+  geom_point(aes(size = count), alpha = 1/3) +
+  geom_smooth(se = FALSE)
+
+```
+
+### Counts
+
+-   Counts help us understand how much data is in each group.
+
+-   We can count total rows, non-missing values, distinct values, and logical conditions.
+
+```{r}
+# Remove cancelled flights
+not_cancelled <- flights %>% 
+  filter(!is.na(dep_delay), !is.na(arr_delay))
+
+# 1. Count number of flights per destination
+not_cancelled %>%
+  group_by(dest) %>%
+  summarize(n = n()) %>%
+  arrange(desc(n))
+```
+
+```{r}
+ggplot(data = delays, mapping = aes(x = delay)) +
+geom_freqpoly(binwidth = 10)
+```
+
+```{r}
+# 2. Count number of non-missing arrival delays
+not_cancelled %>%
+  summarize(non_missing = sum(!is.na(arr_delay)))
+
+```
+
+```{r}
+# 3. Count distinct carriers per destination
+not_cancelled %>%
+  group_by(dest) %>%
+  summarize(carriers = n_distinct(carrier)) %>%
+  arrange(desc(carriers))
+
+```
+
+```{r}
+# 4. Simple count using count()
+not_cancelled %>%
+  count(dest)
+
+```
+
+```{r}
+# 5. Weighted count (total distance flown per plane)
+not_cancelled %>%
+  count(tailnum, wt = distance)
+
+```
+
+```{r}
+# 6. Count logical condition (flights delayed > 60 minutes)
+not_cancelled %>%
+  summarize(delayed_over_1hr = sum(arr_delay > 60, na.rm = TRUE))
+
+```
+
+```{r}
+# 7. Proportion of flights delayed more than 60 minutes
+not_cancelled %>%
+  summarize(prop_delayed = mean(arr_delay > 60, na.rm = TRUE))
+
+```
+
+```{r}
+delays <- not_cancelled %>%
+group_by(tailnum) %>%
+summarize(
+delay = mean(arr_delay, na.rm = TRUE),
+n = n()
+)
+ggplot(data = delays, mapping = aes(x = n, y = delay)) +
+geom_point(alpha = 1/10)
+```
+
+```{r}
+delays %>%
+filter(n > 25) %>%
+ggplot(mapping = aes(x = n, y = delay)) +
+geom_point(alpha = 1/10)
+```

@@ -1,0 +1,183 @@
+---
+title: "Assignment-8"
+author: "Tushar Sharma"
+format: pdf
+editor: visual
+---
+
+# Regression Diagnostics and Hat Matrix Analysis
+
+## Objective
+
+1.  Understand the mathematical structure of linear regression.
+
+2.  Compute the **Hat Matrix** manually.
+
+3.  Identify **leverage and influential observations**.
+
+4.  Evaluate regression assumptions using diagnostic plots and statistical tests
+
+## Dataset
+
+#### - - - - Boston Housing Data set - - - -
+
+Target variable:
+
+```         
+MEDV → Median value of owner-occupied homes
+```
+
+Predictor examples:
+
+```         
+RM, LSTAT, CRIM, NOX
+```
+
+-   Loading libraries
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(car)
+library(lmtest)
+library(nortest)
+library(qpcR)
+```
+
+```{r}
+setwd("D:/Sem-2/R-/7,8,9,10/7")
+data<-read.csv("HousingData.csv")
+head(data)
+```
+
+```{r}
+str(data)
+summary(data)
+```
+
+### Correlation Matrix
+
+```{r}
+cor(data)
+```
+
+### Scatter Plot
+
+```{r}
+pairs(data[,c("MEDV","RM","LSTAT","CRIM","NOX")])
+```
+
+## Multiple linear Regression Model
+
+-   Regression model
+
+    ![](images/Screenshot%202026-03-09%20140754.png)
+
+```{r}
+model <- lm(MEDV ~ RM + LSTAT + CRIM + NOX, data=data)
+
+summary(model)
+```
+
+### Understanding the Hat Matrix
+
+![](images/Screenshot%202026-03-09%20141012.png){fig-align="center"}
+
+## Construct Design Matrix
+
+```{r}
+X <- model.matrix(model)
+
+head(X)
+```
+
+### Compute Hat Matrix Manually
+
+```{r}
+H <- X %*% solve(t(X) %*% X) %*% t(X)
+
+dim(H)
+```
+
+### - Extract Levrage Values
+
+```{r}
+leverage <- diag(H)
+
+head(leverage)
+```
+
+### Residual Analysis
+
+```{r}
+#residual s
+res <- residuals(model)
+
+print(res)
+```
+
+## Plot Residuals vs Fitted
+
+```{r}
+plot(model$fitted.values,
+     res,
+     xlab="Fitted Values",
+     ylab="Residuals",
+     main="Residual vs Fitted")
+
+abline(h=0,col="red")
+```
+
+### - Histogram of Residuals
+
+```{r}
+hist(res,
+     breaks = 20,
+     col = "lightblue",
+     main = "Histogram of Residuals",
+     xlab = "Residuals")
+```
+
+### Density plot
+
+```{r}
+plot(density(res),
+     main = "Density Plot of Residuals",
+     xlab = "Residuals",
+     col = "blue",
+     lwd = 2)
+```
+
+### Boxplot of residual
+
+```{r}
+boxplot(res,
+        main = "Boxplot of Residuals",
+        col = "orange")
+```
+
+### Scale-Location Plot
+
+```{r}
+plot(model$fitted.values,
+     sqrt(abs(res)),
+     xlab = "Fitted Values",
+     ylab = "Sqrt(|Residuals|)",
+     main = "Scale-Location Plot")
+
+abline(h=0,col="red")
+```
+
+### Levrage Pot
+
+```{r}
+plot(hatvalues(model),
+     type="h",
+     main="Leverage Values",
+     ylab="Leverage")
+
+```
+
+```{r}
+
+```

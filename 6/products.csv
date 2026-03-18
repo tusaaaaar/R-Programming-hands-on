@@ -1,0 +1,171 @@
+product_id,product_name,category,brand,list_price,launch_year
+P0001,Samsung Smartphone,Electronics,Dell,50698.79,2023
+P0002,Apple Smartphone,Electronics,Dell,-999,2019
+P0003,HP Smartphone,Electronics,Samsung,NA,2024
+P0004,Samsung Smartphone,Electronics,Sony,15956.37,2023
+P0005,Apple Smartphone,Electronics,HP,-999,2016
+P0006,HP Smartphone,Electronics,HP,NA,2024
+P0007,Samsung Smartphone,Electronics,Dell,NA,2024
+P0008,Samsung Smartphone,Electronics,Samsung,32622.8,2017
+P0009,HP Smartphone,Electronics,HP,-999,2019
+P0010,Sony Smartphone,Electronics,Apple,41939.48,2020
+P0011,Sony Laptop,Electronics,Samsung,-999,2019
+P0012,HP Laptop,Electronics,Samsung,57601.9,2017
+P0013,Apple Laptop,Electronics,HP,56784.18,2022
+P0014,Samsung Laptop,Electronics,HP,-999,2023
+P0015,Dell Laptop,Electronics,Sony,NA,2018
+P0016,Samsung Laptop,Electronics,Apple,-999,2021
+P0017,Dell Laptop,Electronics,HP,NA,2022
+P0018,Sony Laptop,Electronics,Samsung,12883.65,2022
+P0019,Dell Laptop,Electronics,Sony,-999,2021
+P0020,Samsung Laptop,Electronics,Sony,NA,2016
+P0021,Samsung Wireless Earbuds,Electronics,Sony,-999,2023
+P0022,Dell Wireless Earbuds,Electronics,Dell,-999,2019
+P0023,HP Wireless Earbuds,Electronics,Dell,29019.63,2024
+P0024,Samsung Wireless Earbuds,Electronics,Sony,41751.95,2021
+P0025,HP Wireless Earbuds,Electronics,Apple,NA,2024
+P0026,Dell Wireless Earbuds,Electronics,Apple,60893.94,2021
+P0027,Samsung Wireless Earbuds,Electronics,Dell,16874.03,2016
+P0028,Dell Wireless Earbuds,Electronics,Dell,NA,2020
+P0029,HP Wireless Earbuds,Electronics,Dell,NA,2018
+P0030,Sony Wireless Earbuds,Electronics,HP,-999,2019
+P0031,Dell Smart Watch,Electronics,Sony,13537.94,2020
+P0032,HP Smart Watch,Electronics,Sony,NA,2021
+P0033,HP Smart Watch,Electronics,Sony,23977.73,2018
+P0034,HP Smart Watch,Electronics,Dell,NA,2018
+P0035,HP Smart Watch,Electronics,Sony,-999,2017
+P0036,HP Smart Watch,Electronics,Samsung,-999,2024
+P0037,Dell Smart Watch,Electronics,Sony,-999,2018
+P0038,Sony Smart Watch,Electronics,HP,4064.51,2020
+P0039,Dell Smart Watch,Electronics,Sony,NA,2023
+P0040,Samsung Smart Watch,Electronics,Samsung,-999,2023
+P0041,Sony Tablet,Electronics,Apple,6308.84,2017
+P0042,Apple Tablet,Electronics,HP,-999,2018
+P0043,Apple Tablet,Electronics,Apple,57172.86,2017
+P0044,Samsung Tablet,Electronics,Samsung,72242.71,2023
+P0045,Sony Tablet,Electronics,Sony,NA,2017
+P0046,Samsung Tablet,Electronics,Apple,48769.68,2021
+P0047,Samsung Tablet,Electronics,Apple,NA,2024
+P0048,HP Tablet,Electronics,Sony,NA,2024
+P0049,Dell Tablet,Electronics,Apple,NA,2022
+P0050,Dell Tablet,Electronics,Sony,-999,2022
+P0051,Philips Mixer Grinder,Home & Kitchen,Prestige,NA,2023
+P0052,Philips Mixer Grinder,Home & Kitchen,Philips,-999,2019
+P0053,Prestige Mixer Grinder,Home & Kitchen,Prestige,44851.55,2020
+P0054,Bosch Mixer Grinder,Home & Kitchen,Prestige,78463.91,2022
+P0055,Bosch Mixer Grinder,Home & Kitchen,Prestige,17259.39,2018
+P0056,Prestige Mixer Grinder,Home & Kitchen,LG,-999,2018
+P0057,Bosch Mixer Grinder,Home & Kitchen,Prestige,65625.4,2020
+P0058,Bosch Mixer Grinder,Home & Kitchen,Prestige,-999,2018
+P0059,Prestige Mixer Grinder,Home & Kitchen,Bosch,NA,2018
+P0060,Bosch Mixer Grinder,Home & Kitchen,Prestige,65115.1,2016
+P0061,Prestige Air Fryer,Home & Kitchen,Philips,-999,2016
+P0062,Philips Air Fryer,Home & Kitchen,Philips,NA,2021
+P0063,Prestige Air Fryer,Home & Kitchen,LG,78912.3,2022
+P0064,Prestige Air Fryer,Home & Kitchen,Bosch,65541.03,2019
+P0065,Bosch Air Fryer,Home & Kitchen,Prestige,NA,2022
+P0066,Prestige Air Fryer,Home & Kitchen,LG,-999,2017
+P0067,Philips Air Fryer,Home & Kitchen,Bosch,NA,2019
+P0068,Prestige Air Fryer,Home & Kitchen,Bosch,50496.04,2020
+P0069,Philips Air Fryer,Home & Kitchen,Bosch,-999,2023
+P0070,Bosch Air Fryer,Home & Kitchen,Bosch,NA,2018
+P0071,Prestige Vacuum Cleaner,Home & Kitchen,LG,-999,2022
+P0072,Philips Vacuum Cleaner,Home & Kitchen,Philips,NA,2019
+P0073,LG Vacuum Cleaner,Home & Kitchen,Philips,NA,2018
+P0074,Bosch Vacuum Cleaner,Home & Kitchen,LG,26142.23,2019
+P0075,Prestige Vacuum Cleaner,Home & Kitchen,Philips,NA,2021
+P0076,Prestige Vacuum Cleaner,Home & Kitchen,Prestige,2625.23,2017
+P0077,Bosch Vacuum Cleaner,Home & Kitchen,Bosch,NA,2020
+P0078,Bosch Vacuum Cleaner,Home & Kitchen,LG,15151.8,2017
+P0079,Philips Vacuum Cleaner,Home & Kitchen,Bosch,-999,2017
+P0080,Philips Vacuum Cleaner,Home & Kitchen,Bosch,-999,2020
+P0081,Prestige Coffee Maker,Home & Kitchen,Philips,3934.92,2016
+P0082,LG Coffee Maker,Home & Kitchen,Prestige,21339.95,2020
+P0083,Philips Coffee Maker,Home & Kitchen,Prestige,NA,2018
+P0084,Bosch Coffee Maker,Home & Kitchen,LG,-999,2021
+P0085,Bosch Coffee Maker,Home & Kitchen,LG,45676.18,2023
+P0086,LG Coffee Maker,Home & Kitchen,Prestige,-999,2021
+P0087,LG Coffee Maker,Home & Kitchen,Prestige,NA,2022
+P0088,Prestige Coffee Maker,Home & Kitchen,Bosch,NA,2022
+P0089,Bosch Coffee Maker,Home & Kitchen,Bosch,58420.27,2022
+P0090,Philips Coffee Maker,Home & Kitchen,Philips,NA,2016
+P0091,Penguin Fiction Novel,Books,Penguin,-999,2017
+P0092,HarperCollins Fiction Novel,Books,HarperCollins,53670.04,2022
+P0093,Penguin Fiction Novel,Books,OReilly,-999,2018
+P0094,OReilly Fiction Novel,Books,OReilly,38122.64,2024
+P0095,OReilly Fiction Novel,Books,OReilly,-999,2023
+P0096,OReilly Fiction Novel,Books,Packt,15525.49,2018
+P0097,Packt Fiction Novel,Books,Penguin,68973.61,2019
+P0098,Packt Fiction Novel,Books,HarperCollins,-999,2021
+P0099,OReilly Fiction Novel,Books,HarperCollins,NA,2021
+P0100,OReilly Fiction Novel,Books,HarperCollins,42525.29,2023
+P0101,Packt Self Help Book,Books,Penguin,NA,2023
+P0102,Packt Self Help Book,Books,OReilly,NA,2019
+P0103,HarperCollins Self Help Book,Books,OReilly,6044.83,2023
+P0104,HarperCollins Self Help Book,Books,OReilly,NA,2021
+P0105,Packt Self Help Book,Books,Penguin,NA,2023
+P0106,HarperCollins Self Help Book,Books,Penguin,3215.51,2022
+P0107,Penguin Self Help Book,Books,Penguin,NA,2016
+P0108,OReilly Self Help Book,Books,OReilly,NA,2020
+P0109,Penguin Self Help Book,Books,Packt,NA,2020
+P0110,HarperCollins Self Help Book,Books,HarperCollins,NA,2021
+P0111,Packt Programming Guide,Books,HarperCollins,NA,2021
+P0112,HarperCollins Programming Guide,Books,Packt,73285.82,2018
+P0113,Packt Programming Guide,Books,OReilly,29067.73,2018
+P0114,Penguin Programming Guide,Books,HarperCollins,NA,2019
+P0115,HarperCollins Programming Guide,Books,OReilly,-999,2017
+P0116,OReilly Programming Guide,Books,Packt,NA,2024
+P0117,Packt Programming Guide,Books,OReilly,NA,2017
+P0118,HarperCollins Programming Guide,Books,OReilly,-999,2019
+P0119,OReilly Programming Guide,Books,HarperCollins,NA,2017
+P0120,HarperCollins Programming Guide,Books,OReilly,16186.92,2018
+P0121,OReilly Data Science Handbook,Books,Packt,NA,2017
+P0122,Penguin Data Science Handbook,Books,HarperCollins,-999,2022
+P0123,Penguin Data Science Handbook,Books,OReilly,-999,2020
+P0124,OReilly Data Science Handbook,Books,Packt,NA,2016
+P0125,HarperCollins Data Science Handbook,Books,HarperCollins,-999,2017
+P0126,Penguin Data Science Handbook,Books,Packt,51255.34,2023
+P0127,HarperCollins Data Science Handbook,Books,OReilly,-999,2021
+P0128,OReilly Data Science Handbook,Books,Packt,NA,2021
+P0129,Penguin Data Science Handbook,Books,OReilly,NA,2022
+P0130,Packt Data Science Handbook,Books,Packt,21753.91,2020
+P0131,Puma Men T-Shirt,Fashion,Nike,-999,2016
+P0132,Levis Men T-Shirt,Fashion,Adidas,-999,2022
+P0133,Puma Men T-Shirt,Fashion,Nike,56421.65,2020
+P0134,Levis Men T-Shirt,Fashion,Nike,-999,2022
+P0135,Adidas Men T-Shirt,Fashion,Nike,NA,2024
+P0136,Adidas Men T-Shirt,Fashion,Puma,NA,2017
+P0137,Adidas Men T-Shirt,Fashion,Adidas,8047.78,2023
+P0138,Nike Men T-Shirt,Fashion,Puma,26411.94,2018
+P0139,Adidas Men T-Shirt,Fashion,Levis,NA,2017
+P0140,Levis Men T-Shirt,Fashion,Nike,79584.2,2024
+P0141,Levis Women Dress,Fashion,Adidas,NA,2020
+P0142,Adidas Women Dress,Fashion,Levis,50546.79,2016
+P0143,Puma Women Dress,Fashion,Levis,-999,2021
+P0144,Nike Women Dress,Fashion,Levis,42455.23,2023
+P0145,Adidas Women Dress,Fashion,Nike,NA,2017
+P0146,Levis Women Dress,Fashion,Nike,-999,2021
+P0147,Levis Women Dress,Fashion,Levis,NA,2016
+P0148,Nike Women Dress,Fashion,Adidas,-999,2016
+P0149,Adidas Women Dress,Fashion,Levis,-999,2017
+P0150,Puma Women Dress,Fashion,Nike,-999,2024
+P0151,Puma Sneakers,Fashion,Levis,62493.75,2018
+P0152,Adidas Sneakers,Fashion,Levis,36660.01,2016
+P0153,Levis Sneakers,Fashion,Levis,NA,2021
+P0154,Puma Sneakers,Fashion,Puma,-999,2017
+P0155,Adidas Sneakers,Fashion,Nike,-999,2023
+P0156,Adidas Sneakers,Fashion,Nike,-999,2020
+P0157,Nike Sneakers,Fashion,Puma,NA,2021
+P0158,Adidas Sneakers,Fashion,Puma,NA,2022
+P0159,Adidas Sneakers,Fashion,Puma,NA,2018
+P0160,Puma Sneakers,Fashion,Nike,-999,2016
+P0161,Puma Jacket,Fashion,Levis,72694.84,2018
+P0162,Levis Jacket,Fashion,Adidas,-999,2024
+P0163,Levis Jacket,Fashion,Nike,NA,2018
+P0164,Levis Jacket,Fashion,Levis,NA,2023
+P0165,Nike Jacket,Fashion,Nike,NA,2020
+P0166,Puma Jacket,Fashion,Adidas,NA,2018
+P0167,Nike Jacket,Fashion,Adidas,NA,2016
+P0168,Nike Jacket,Fashion,Adidas,-999,2018
+P0169,Adidas Jacket,Fashion,Adidas,-999,2016
+P0170,Nike Jacket,Fashion,Nike,-999,2022

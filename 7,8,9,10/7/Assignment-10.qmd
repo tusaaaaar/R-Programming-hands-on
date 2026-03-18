@@ -1,0 +1,231 @@
+---
+title: "Assignmnet-10"
+author: "Tushar Sharma"
+format: pdf
+editor: visual
+---
+
+### Load Libraries
+
+```{r}
+library(mlbench) # PimaIndiansDiabetes dataset
+library(caret) # createDataPartition(), confusionMatrix()
+library(pROC) # roc(), auc(), coords()
+library(ggplot2)
+library(dplyr)
+
+
+```
+
+### Load Dataset
+
+```{r}
+data(PimaIndiansDiabetes)
+df <- PimaIndiansDiabetes
+head(df)
+
+```
+
+```{r}
+str(df)
+summary(df)
+```
+
+### Data Exploration
+
+#### Class Distribution
+
+```{r}
+table(df$diabetes)
+cat(sprintf("\nClass balance: %.1f%% negative | %.1f%% positive\n",
+500/768*100, 268/768*100))
+
+```
+
+### Glucose Distribution by Diabetes Class
+
+```{r}
+ggplot(df, aes(x = glucose, fill = diabetes)) +
+geom_histogram(alpha = 0.6, bins = 30, colour = "white") +
+scale_fill_manual(values = c("neg" = "#F48FB1", "pos" = "#4DD0E1")) +
+theme_minimal(base_size = 12) +
+labs(title = "Glucose Distribution by Diabetes Class",
+x = "Glucose Level",
+y = "Count",
+fill = "Diabetes")
+```
+
+### Additonal Exploratory Plots
+
+```{r}
+ggplot(df, aes(x = diabetes, y = mass, fill = diabetes)) +
+geom_boxplot(alpha = 0.7, outlier.colour = "red", outlier.size = 1.5) +
+scale_fill_manual(values = c("neg" = "#81D4FA", "pos" = "#EF9A9A")) +
+theme_minimal(base_size = 12) +
+labs(title = "BMI by Diabetes Class",
+x = "Diabetes Status",
+y = "BMI (mass)",
+fill = "Diabetes")
+```
+
+```{r}
+ggplot(df, aes(x = diabetes, y = age, fill = diabetes)) +
+geom_boxplot(alpha = 0.7, outlier.colour = "red", outlier.size = 1.5) +
+scale_fill_manual(values = c("neg" = "#C5E1A5", "pos" = "#FFCC80")) +
+theme_minimal(base_size = 12) +
+labs(title = "Age Distribution by Diabetes Class",
+x = "Diabetes Status",
+y = "Age",
+fill = "Diabetes")
+```
+
+```{r}
+train_index <- createDataPartition(df$diabetes,
+p = 0.8,
+list = FALSE)
+train <- df[train_index, ]
+test <- df[-train_index, ]
+cat(sprintf("Training rows : %d\n", nrow(train)))
+
+```
+
+```{r}
+cat(sprintf("Testing rows : %d\n", nrow(test)))
+cat(sprintf("\nTrain class distribution:\n"))
+print(table(train$diabetes))
+```
+
+```{r}
+model <- glm(diabetes ~ .,
+data = train,
+family = binomial)
+summary(model)
+```
+
+### Generate Predicted Probabilities
+
+```{r}
+prob_predictions <- predict(model,
+newdata = test,
+type = "response")
+head(prob_predictions)
+cat(sprintf("\nProbability range: [%.4f, %.4f]\n",
+min(prob_predictions), max(prob_predictions)))
+```
+
+## ROC Curve Object
+
+```{r}
+roc_obj <- roc(test$diabetes,
+              prob_predictions,
+              levels = c("neg", "pos"))
+print(roc_obj)
+```
+
+### AUC Calculation
+
+```{r}
+auc_value <- auc(roc_obj)
+cat(sprintf("AUC: %.4f\n", auc_value))
+# AUC confidence interval
+auc_ci <- ci.auc(roc_obj)
+cat(sprintf("95%% CI: [%.4f, %.4f]\n", auc_ci[1], auc_ci[3]))
+```
+
+### ROC Curve Visualisation
+
+```{r}
+plot(roc_obj,
+col = "blue",
+lwd = 3,
+main = "ROC Curve for Diabetes Prediction")
+abline(a = 0, b = 1, col = "gray", lty = 2)
+legend("bottomright",
+legend = sprintf("AUC = %.4f", auc_value),
+col = "blue",
+lwd = 3,
+bty = "n")
+```
+
+### 
+
+### ggplot2 ROC Curve
+
+```{r}
+roc_df <- data.frame(
+FPR = 1 - roc_obj$specificities,
+TPR = roc_obj$sensitivities,
+Thresholds = roc_obj$thresholds
+)
+ggplot(roc_df, aes(x = FPR, y = TPR)) +
+geom_line(colour = "steelblue", linewidth = 1.2) +
+geom_abline(slope = 1, intercept = 0,
+colour = "gray50", linetype = "dashed") +
+geom_area(fill = "steelblue", alpha = 0.1) +
+annotate("text", x = 0.65, y = 0.15,
+label = sprintf("AUC = %.4f", auc_value),
+size = 5, colour = "steelblue", fontface = "bold") +
+scale_x_continuous(limits = c(0, 1), labels = scales::percent_format()) +
+scale_y_continuous(limits = c(0, 1), labels = scales::percent_format()) +
+theme_minimal(base_size = 12) +
+labs(title = "ROC Curve — Diabetes Prediction (Logistic Regression)",
+## ── Optimal Threshold ──
+## threshold sensitivity specificity
+## 1 0.2828958 0.8867925 0.77
+subtitle = "Pima Indians Diabetes Dataset",
+x = "False Positive Rate (1 − Specificity)",
+y = "True Positive Rate (Sensitivity)")
+
+```
+
+### Optimal Threshold
+
+```{r}
+best_threshold <- coords(roc_obj,
+"best",
+ret = c("threshold", "sensitivity", "specificity"))
+print(best_threshold)
+```
+
+### Probability Distribution
+
+```{r}
+ggplot(data.frame(prob = prob_predictions,
+actual = test$diabetes),
+aes(x = prob, fill = actual)) +
+geom_histogram(bins = 30, colour = "white", alpha = 0.75,
+position = "identity") +
+geom_vline(xintercept = 0.5, colour = "red",
+linetype = "dashed", linewidth = 1) +
+geom_vline(xintercept = best_threshold$threshold,
+colour = "darkgreen", linetype = "dashed", linewidth = 1) +
+scale_fill_manual(values = c("neg" = "#81D4FA", "pos" = "#EF9A9A")) +
+theme_minimal(base_size = 12) +
+labs(title = "Distribution of Predicted Probabilities",
+subtitle = "Red dashed = 0.5 threshold | Green dashed = optimal threshold",
+x = "Predicted Probability",
+y = "Frequency",
+fill = "Actual Class")
+```
+
+### Model Evalutation
+
+### Confusion Matrix at degault Threshhold
+
+```{r}
+predicted_class_05 <- ifelse(prob_predictions > 0.5, "pos", "neg")
+cm_05 <- confusionMatrix(as.factor(predicted_class_05), test$diabetes)
+print(cm_05)
+```
+
+### Confusion Matrix at Optimal Threshold
+
+```{r}
+predicted_class_opt <- ifelse(prob_predictions > best_threshold$threshold,
+"pos", "neg")
+cm_opt <- confusionMatrix(as.factor(predicted_class_opt), test$diabetes)
+print(cm_opt)
+
+```
+
+### 

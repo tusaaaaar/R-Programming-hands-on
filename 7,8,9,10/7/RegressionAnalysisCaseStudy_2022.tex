@@ -1,0 +1,634 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Regression Analysis Case Study - Hald Cement Dataset},
+  pdfauthor={G Radhesyam},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\newif\ifbibliography
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Regression Analysis Case Study - Hald Cement Dataset}
+\author{G Radhesyam}
+\date{19 March 2022}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{HALD CEMENT Dataset}
+\protect\hypertarget{hald-cement-dataset}{}
+\begin{itemize}
+\item
+  The response variable Y is the heat evolved in a cement mix.
+\item
+  The four explanatory variables are ingredients of the mix,
+
+  \begin{itemize}
+  \tightlist
+  \item
+    X1:Tricalcium aluminate
+  \item
+    X2:Tricalcium silicate,
+  \item
+    X3:Tetracalcium alumino ferrite
+  \item
+    X4:Dicalcium silicate.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{HALD CEMENT Dataset}
+\protect\hypertarget{hald-cement-dataset-1}{}
+\begin{verbatim}
+## Rows: 13 Columns: 5
+## -- Column specification --------------------------------------------------------
+## Delimiter: ","
+## dbl (5): Y, X1, X2, X3, X4
+## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+\end{verbatim}
+
+\begin{verbatim}
+## # A tibble: 6 x 5
+##       Y    X1    X2    X3    X4
+##   <dbl> <dbl> <dbl> <dbl> <dbl>
+## 1  78.5     7    26     6    60
+## 2  74.3     1    29    15    52
+## 3 104.     11    56     8    20
+## 4  87.6    11    31     8    47
+## 5  95.9     7    52     6    33
+## 6 109.     11    55     9    22
+\end{verbatim}
+
+\begin{verbatim}
+## spec_tbl_df [13 x 5] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ Y : num [1:13] 78.5 74.3 104.3 87.6 95.9 ...
+##  $ X1: num [1:13] 7 1 11 11 7 11 3 1 2 21 ...
+##  $ X2: num [1:13] 26 29 56 31 52 55 71 31 54 47 ...
+##  $ X3: num [1:13] 6 15 8 8 6 9 17 22 18 4 ...
+##  $ X4: num [1:13] 60 52 20 47 33 22 6 44 22 26 ...
+##  - attr(*, "spec")=
+##   .. cols(
+##   ..   Y = col_double(),
+##   ..   X1 = col_double(),
+##   ..   X2 = col_double(),
+##   ..   X3 = col_double(),
+##   ..   X4 = col_double()
+##   .. )
+##  - attr(*, "problems")=<externalptr>
+\end{verbatim}
+
+\begin{verbatim}
+## cols(
+##   Y = col_double(),
+##   X1 = col_double(),
+##   X2 = col_double(),
+##   X3 = col_double(),
+##   X4 = col_double()
+## )
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{HALD CEMENT - FINAL MODEL SUMMARY}
+\protect\hypertarget{hald-cement---final-model-summary}{}
+\begin{itemize}
+\item
+  Model : X1+X2
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Y = 52.5773 + (1.4683) X1 + ( 0.6623) X2
+  \item
+    All Regression assumptions met.
+  \end{itemize}
+\item
+  Normality test
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Shapiro-wilks Test - Distribution is Normal
+  \end{itemize}
+\item
+  W = 0.90219, p-value = 0.1433
+\item
+  Anderson-Darling test - Distribution is normal
+\item
+  A = 0.61361, p-value = 0.08628
+\item
+  Equal Variance Test
+
+  \begin{itemize}
+  \tightlist
+  \item
+    studentized Breusch-Pagan test
+  \item
+    BP = 0.16688, df = 2, p-value = 0.9199
+  \item
+    H0 : Variances are equal
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{HALD CEMENT - FINAL MODEL SUMMARY (Contd\ldots)}
+\protect\hypertarget{hald-cement---final-model-summary-contd}{}
+\begin{verbatim}
+  * Independence/Auto Correllation Test (Durbin-Watson (D-W) test )
+     - H0 : Auto correlation is zero
+\end{verbatim}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+lag & Autocorrelation & D-W Statistic & p-value \\
+\midrule
+\endhead
+1 & -0.05450402 & 1.92164 & 0.892 \\
+\bottomrule
+\end{longtable}
+
+\begin{itemize}
+\tightlist
+\item
+  Linearity test
+
+  \begin{itemize}
+  \item
+    Box-Tidwell - H0 : No Transformation needed
+  \item
+    Box-Tidwell test (Y,X1)
+  \item
+    MLE of lambda Score Statistic (z) Pr(\textgreater\textbar z\textbar)
+  \item
+\begin{verbatim}
+  0.23145             -0.7366   0.4614
+\end{verbatim}
+  \item
+    Box-Tidwell test ( Y,X2)
+  \item
+    MLE of lambda Score Statistic (z) Pr(\textgreater\textbar z\textbar)
+  \item
+    -0.71695 -1.35 0.177
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{HALD CEMENT - MODEL ANALYSIS and DETAILS}
+\protect\hypertarget{hald-cement---model-analysis-and-details}{}
+\begin{itemize}
+\item
+  An F statistic is a value you get when you run an ANOVA test or a
+  regression analysis to find out if the means between two populations
+  are significantly different.
+\item
+  It's similar to a T statistic from a T-Test;
+\item
+  A T-test will tell you if a single variable is statistically
+  significant and
+\item
+  an F test will tell you if a group of variables are jointly
+  significant.
+\item
+  \url{https://www.statisticshowto.com/probability-and-statistics/f-statistic-value-test/}
+\item
+  Regression NULL Hypothesis: All of the regression coefficients are
+  equal to zero
+\item
+  Tip: P-value is High ,NUll will Fly
+\item
+\begin{verbatim}
+ P-value is low, NULL will blow
+\end{verbatim}
+\item
+  T-Test in Regression
+\item
+  \url{https://www.statology.org/t-test-linear-regression/}
+\end{itemize}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = haldcement$Y ~ ., data = haldcement)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.1750 -1.6709  0.2508  1.3783  3.9254 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)  
+## (Intercept)  62.4054    70.0710   0.891   0.3991  
+## X1            1.5511     0.7448   2.083   0.0708 .
+## X2            0.5102     0.7238   0.705   0.5009  
+## X3            0.1019     0.7547   0.135   0.8959  
+## X4           -0.1441     0.7091  -0.203   0.8441  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.446 on 8 degrees of freedom
+## Multiple R-squared:  0.9824, Adjusted R-squared:  0.9736 
+## F-statistic: 111.5 on 4 and 8 DF,  p-value: 4.756e-07
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{HALD CEMENT - Scatter plot}
+\protect\hypertarget{hald-cement---scatter-plot}{}
+\includegraphics{E:/Radhesyam/RProjects/MDSC206/Regression/2022/RegressionAnalysisCaseStudy_2022_files/figure-beamer/unnamed-chunk-4-1.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  \url{https://ggobi.github.io/ggally/reference/ggpairs.html}
+\item
+\end{itemize}
+
+\begin{verbatim}
+## Registered S3 method overwritten by 'GGally':
+##   method from   
+##   +.gg   ggplot2
+\end{verbatim}
+
+\includegraphics{E:/Radhesyam/RProjects/MDSC206/Regression/2022/RegressionAnalysisCaseStudy_2022_files/figure-beamer/unnamed-chunk-5-1.pdf}
+\includegraphics{E:/Radhesyam/RProjects/MDSC206/Regression/2022/RegressionAnalysisCaseStudy_2022_files/figure-beamer/unnamed-chunk-6-1.pdf}
+\end{frame}
+
+\begin{frame}[fragile]{HALD CEMENT - Influence points}
+\protect\hypertarget{hald-cement---influence-points}{}
+\begin{itemize}
+\tightlist
+\item
+  \url{https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/influence.measures}
+\item
+  influence.measures: Regression Deletion Diagnostics
+\item
+  \url{https://rpubs.com/mpfoley73/501093} \tiny
+\end{itemize}
+
+\begin{verbatim}
+##  1  3  5 10 
+##  1  3  5 10
+\end{verbatim}
+
+\begin{verbatim}
+## Potentially influential observations of
+##   lm(formula = haldcement$Y ~ ., data = haldcement) :
+## 
+##    dfb.1_  dfb.X1  dfb.X2  dfb.X3  dfb.X4  dffit cov.r   cook.d hat  
+## 1   0.00    0.00    0.00    0.00    0.00    0.00  4.34_*  0.00   0.55
+## 3  -1.10_*  1.03_*  1.08_*  1.08_*  1.10_* -1.24  2.19    0.30   0.58
+## 5  -0.02    0.00    0.02    0.00    0.02    0.09  3.00_*  0.00   0.36
+## 10 -0.05    0.12    0.04    0.08    0.05    0.30  6.33_*  0.02   0.70
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 4 9
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}{Influence points analysis}
+\protect\hypertarget{influence-points-analysis}{}
+\begin{itemize}
+\item
+  n= 4 and k= 9
+\item
+  A Point is an influence point if
+
+  \begin{itemize}
+  \item
+    COOK's D-statistic(D) \textgreater{} 1
+  \item
+    DFBETAS \textgreater{}
+    \({2 \over \sqrt{n}} = {2 \over \sqrt{4}} = 1\), i.e DFBETAS
+    \textgreater{} 1
+  \item
+    DFFITS \textgreater{}
+    \(2 * \sqrt{ k \over n} = 2 * \sqrt{9 \over 4} = 3\) , i.e DFFITS
+    \textgreater{} 3
+  \end{itemize}
+\item
+  INFLUENCE POINT
+\item
+  Point 3 (as per DFBETAS). None as per DFFITS and cook's distance D.
+\item
+  INVESTIGATION
+\item
+  Point 3 is within 2 sigma limits of X1,X2,X3 and X4. So retain it
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{MULTICOLLINEARITY Check}
+\protect\hypertarget{multicollinearity-check}{}
+\begin{verbatim}
+##        X1        X2        X3        X4 
+##  38.49621 254.42317  46.86839 282.51286
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  OBSERVATION: SEVERE MULTICOLLINEARITY as VIF \textgreater{} 10 FOR ALL
+  VARIABLES
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Correlation Co-efficients - Pearson test}
+\protect\hypertarget{correlation-co-efficients---pearson-test}{}
+\tiny
+
+\begin{verbatim}
+##    row column        cor            p
+## 1    Y     X1  0.7307175 4.552045e-03
+## 2    Y     X2  0.8162526 6.648249e-04
+## 3   X1     X2  0.2285795 4.525662e-01
+## 4    Y     X3 -0.5346707 5.976232e-02
+## 5   X1     X3 -0.8241338 5.308752e-04
+## 6   X2     X3 -0.1392424 6.500589e-01
+## 7    Y     X4 -0.8213050 5.762318e-04
+## 8   X1     X4 -0.2454451 4.189332e-01
+## 9   X2     X4 -0.9729550 2.404645e-08
+## 10  X3     X4  0.0295370 9.236906e-01
+\end{verbatim}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Test of Hypothesis (Pearson)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    H0: \(\rho\) = 0 ; i.e No relationship between the variables.
+  \item
+    H1 : \(\rho\) \(\neq\) 0
+  \end{itemize}
+\item
+  OBSERVATION:
+\item
+  No Correllation : Accept H0 : X1,X2 (p=0.4); X2,X3
+  (p=0.6),X1,X4(p=0.4),X3,X4 (p=0.9)
+\item
+  Correlation exists : Accept H1 : X1,X3 (\textless{} 0.05);X2,X4
+  (\textless{} 0.05)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Variable Selection - Forward selection}
+\protect\hypertarget{variable-selection---forward-selection}{}
+\begin{verbatim}
+##   (Intercept) X1 X2 X3 X4        R2     SSres     AdjR2         Cp        BIC
+## 1           1  0  0  0  1 0.6745420 883.86692 0.6449549 138.730833  -9.462884
+## 2           1  1  0  0  1 0.9724710  74.76211 0.9669653   5.495851 -39.007873
+## 3           1  1  1  0  1 0.9823355  47.97273 0.9764473   3.018233 -42.210745
+## 4           1  1  1  1  1 0.9823756  47.86364 0.9735634   5.000000 -39.675391
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  RECOMMENDATION : X4 +X1 =97\%
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Variable Selection - Backward Elimination}
+\protect\hypertarget{variable-selection---backward-elimination}{}
+\begin{verbatim}
+##   (Intercept) X1 X2 X3 X4        R2     SSres     AdjR2         Cp        BIC
+## 1           1  0  1  0  0 0.6662683 906.33634 0.6359290 142.486407  -9.136532
+## 2           1  1  1  0  0 0.9786784  57.90448 0.9744140   2.678242 -42.329587
+## 3           1  1  1  0  1 0.9823355  47.97273 0.9764473   3.018233 -42.210745
+## 4           1  1  1  1  1 0.9823756  47.86364 0.9735634   5.000000 -39.675391
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  RECOMMENDATION : X2 + X1 = 97\%
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Variable Selection - Stepwise Regression}
+\protect\hypertarget{variable-selection---stepwise-regression}{}
+\begin{verbatim}
+##   (Intercept) X1 X2 X3 X4        R2     SSres     AdjR2         Cp        BIC
+## 1           1  0  0  0  1 0.6745420 883.86692 0.6449549 138.730833  -9.462884
+## 2           1  1  1  0  0 0.9786784  57.90448 0.9744140   2.678242 -42.329587
+## 3           1  1  1  1  0 0.9822847  48.11061 0.9763796   3.041280 -42.173433
+## 4           1  1  1  1  1 0.9823756  47.86364 0.9735634   5.000000 -39.675391
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  RECOMMENDATION : X4+X1+X2= 97\%
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Variable Selection - PCA}
+\protect\hypertarget{variable-selection---pca}{}
+\includegraphics{E:/Radhesyam/RProjects/MDSC206/Regression/2022/RegressionAnalysisCaseStudy_2022_files/figure-beamer/unnamed-chunk-19-1.pdf}
+* RECOMMENDATION : : PCA1: X2 and X4 ( X4 very close to X3)
+\end{frame}
+
+\begin{frame}{FINALIZING VARIABLE/MODEL selection}
+\protect\hypertarget{finalizing-variablemodel-selection}{}
+\begin{longtable}[]{@{}lllll@{}}
+\toprule
+VAR & PRESS & VIF & \(R^{2}\)(adj) & \(R^{2}\)(pred) \\
+\midrule
+\endhead
+X1+X2 & 93.8 & 1 & 97\% & 96\% \\
+X2+X4 & 1461.8 & 18 & 61\% & 46\% \\
+X4+X1 & 121.2 & 1 & 96\% & 95\% \\
+X2+X3 & 701.7 & 1 & 81\% & 74\% \\
+\bottomrule
+\end{longtable}
+
+\begin{itemize}
+\tightlist
+\item
+  RECOMMENDATION :PRESS stat should be small ( so that R-sq(pred) is
+  high) and VIF=1.
+\item
+  We will go with Model 1 : X1+X2
+\end{itemize}
+\end{frame}
+
+\begin{frame}{FINAL Model : X1 + X2 : Validation of Regression
+Assumptions}
+\protect\hypertarget{final-model-x1-x2-validation-of-regression-assumptions}{}
+\begin{itemize}
+\item
+  Normality test
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Shapiro-wilks Test - Distribution is Normal
+  \end{itemize}
+\item
+  W = 0.90219, p-value = 0.1433
+\item
+  Anderson-Darling test - Distribution is normal
+\item
+  A = 0.61361, p-value = 0.08628
+\item
+  Equal Variance Test
+
+  \begin{itemize}
+  \tightlist
+  \item
+    studentized Breusch-Pagan test
+  \item
+    BP = 0.16688, df = 2, p-value = 0.9199
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{FINAL Model : X1 + X2 : Validation of Regression
+Assumptions (contd..)}
+\protect\hypertarget{final-model-x1-x2-validation-of-regression-assumptions-contd..}{}
+\begin{itemize}
+\tightlist
+\item
+  Independence/Auto Correllation Test (Durbin-Watson (D-W) test )
+\end{itemize}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+lag & Autocorrelation & D-W Statistic & p-value \\
+\midrule
+\endhead
+1 & -0.05450402 & 1.92164 & 0.892 \\
+\bottomrule
+\end{longtable}
+
+\begin{itemize}
+\tightlist
+\item
+  Linearity test
+
+  \begin{itemize}
+  \item
+    Box-Tidwell test (Y,X1)
+  \item
+    MLE of lambda Score Statistic (z) Pr(\textgreater\textbar z\textbar)
+  \item
+\begin{verbatim}
+  0.23145             -0.7366   0.4614
+\end{verbatim}
+  \item
+    Box-Tidwell test ( Y,X2)
+  \item
+    MLE of lambda Score Statistic (z) Pr(\textgreater\textbar z\textbar)
+  \item
+    -0.71695 -1.35 0.177
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\end{document}

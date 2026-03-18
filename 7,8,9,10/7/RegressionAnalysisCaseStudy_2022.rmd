@@ -1,0 +1,459 @@
+---
+title: "Regression Analysis Case Study - Hald Cement Dataset"
+author: "G Radhesyam"
+date: "19 March 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+```
+```{r include=FALSE}
+# Set the environment
+getwd()
+# Please set your current working directory path here
+setwd("E:/Radhesyam/RProjects/mdsc206/Regression")
+
+#Load the libraries required.
+library(tidyverse)
+library(MASS)
+library(ggplot2) # plot
+library(calibrate) # textxy??
+library(car)#vif, durbin-watson test
+library(orcutt)  # To fix atuto-correlation issue
+library(leaps) #regsubset - forward / Backward Substitution
+library(qpcR)#To calculate PRESS Residual and PRESS Statistic
+library(factoextra)## PCA graphs
+library(nortest) #### for normality testing - Anderson-Darling etc
+library(Hmisc)
+```
+
+## HALD CEMENT Dataset
+
+* The response variable Y is the heat evolved in a cement mix.
+
+* The four explanatory variables are ingredients of the mix,
+  + X1:Tricalcium aluminate
+  + X2:Tricalcium silicate,
+  + X3:Tetracalcium alumino ferrite
+  + X4:Dicalcium silicate.
+
+## HALD CEMENT Dataset
+```{r echo=FALSE}
+haldcement <- readr::read_csv("BEST-Hald Cement data.csv")
+head(haldcement ) # fetch first 6 rows
+str(haldcement ) #
+spec(haldcement) # spec() extracts the full column specification from a tibble created by readr.
+attach(haldcement) # So that we can directly refer to column names/feature names
+```
+
+## HALD CEMENT - FINAL MODEL SUMMARY
+* Model : X1+X2
+  - Y = 52.5773  + (1.4683) X1 + ( 0.6623) X2
+  - All Regression assumptions met.
+
+* Normality test
+  + Shapiro-wilks Test - Distribution is Normal
+ - W = 0.90219, p-value = 0.1433
+  + Anderson-Darling test - Distribution is normal
+ - A = 0.61361, p-value = 0.08628
+
+
+* Equal Variance Test
+  + studentized Breusch-Pagan test
+  - BP = 0.16688, df = 2, p-value = 0.9199
+  - H0 : Variances are equal
+
+## HALD CEMENT - FINAL MODEL SUMMARY (Contd...)
+      * Independence/Auto Correllation Test (Durbin-Watson (D-W) test )
+         - H0 : Auto correlation is zero
+
+lag  | Autocorrelation | D-W Statistic | p-value
+-----|-----------------|---------------|--------
+1   | -0.05450402     |  1.92164      | 0.892
+
+
+* Linearity test
+  + Box-Tidwell - H0 : No Transformation needed
+  + Box-Tidwell test (Y,X1)
+  +  MLE of lambda Score Statistic (z) Pr(>|z|)
+  +       0.23145             -0.7366   0.4614
+  + Box-Tidwell test ( Y,X2)
+  + MLE of lambda Score Statistic (z) Pr(>|z|)
+  +    -0.71695               -1.35    0.177
+
+## HALD CEMENT - MODEL ANALYSIS and DETAILS
+* An F statistic is a value you get when you run an ANOVA test or a regression analysis to find out if the means
+  between two populations are significantly different.
+* It’s similar to a T statistic from a T-Test;
+* A T-test will tell you if a single variable is statistically significant and
+* an F test will tell you if a group of variables are jointly significant.
+* https://www.statisticshowto.com/probability-and-statistics/f-statistic-value-test/
+* Regression NULL Hypothesis:  All of the regression coefficients are equal to zero
+* Tip: P-value is High ,NUll will Fly
+*      P-value is low, NULL will blow
+* T-Test in Regression
+* https://www.statology.org/t-test-linear-regression/
+```{r echo=FALSE}
+# So let us build an initial model with Y vs X1,X2,X3 and X4
+HC_LM_1 <- lm(haldcement$Y ~ ., data = haldcement )
+
+# What's the model - linear equation
+#HC_LM_1
+
+#Summary of the model ( R2 adjusted etc)
+summary(HC_LM_1)
+```
+## HALD CEMENT - Scatter plot
+```{r echo=FALSE}
+library(ggplot2)
+panel.cor <- function(x, y){
+  usr <- par("usr"); on.exit(par(usr))
+  par(usr = c(0, 1, 0, 1))
+  r <- round(cor(x, y), digits=2)
+  txt <- paste0("R = ", r)
+  cex.cor <- 0.8/strwidth(txt)
+  text(0.5, 0.5, txt, cex = cex.cor * r)
+}
+pairs(haldcement$Y ~ ., data = haldcement,lower.panel = panel.cor)
+```
+
+* https://ggobi.github.io/ggally/reference/ggpairs.html
+*
+```{r echo=FALSE}
+# Quick display of two cabapilities of GGally, to assess the distribution and correlation of variables
+library(GGally)
+ggpairs(data=haldcement, title="Haldcement Dataset correlogram with ggpairs()",
+        upper = list(continuous = wrap("cor", size = 9)))
+```
+```{r echo=FALSE}
+# Quick display of two cabapilities of GGally, to assess the distribution and correlation of variables
+library(GGally)
+# Nice visualization of correlations
+ggcorr(data=haldcement, method = c("everything", "pearson"))
+```
+
+## HALD CEMENT - Influence points
+* https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/influence.measures
+* influence.measures: Regression Deletion Diagnostics
+* https://rpubs.com/mpfoley73/501093
+```{r echo=FALSE,size="tiny"}
+inflm.HC_LM_1 <-  influence.measures(HC_LM_1)
+which(apply(inflm.HC_LM_1$is.inf, 1, any))
+# which observations 'are' influential
+dim(summary(inflm.HC_LM_1)) # only these
+```
+
+## Influence points analysis
+
+* n= 4 and k= 9
+
+* A Point is an influence point if
+
+  + COOK's D-statistic(D) > 1
+
+  + DFBETAS > ${2 \over \sqrt{n}}  = {2 \over \sqrt{4}}   = 1$, i.e DFBETAS > 1
+
+  + DFFITS > $2 * \sqrt{ k \over n} = 2 * \sqrt{9 \over 4} = 3$ , i.e DFFITS > 3
+
+
+ * INFLUENCE POINT
+  + Point 3 (as per DFBETAS). None as per DFFITS and cook's distance D.
+
+ * INVESTIGATION
+  + Point 3 is within 2 sigma limits of X1,X2,X3 and X4. So retain it
+
+
+```{r  include=FALSE}
+# Find 3 sigma limits of X1
+paste0("3 sigma limits of X1  ",(mean(haldcement$X1) - 3 * sd(haldcement$X1)),"  ",(mean(haldcement$X1) + 3 * sd(haldcement$X1)))
+# Find 3 sigma limits of X2
+paste0("3 sigma limits of X2  ",(mean(haldcement$X2) - 3 * sd(haldcement$X2)),"  ",(mean(haldcement$X2) + 3 * sd(haldcement$X2)))
+# Find 3 sigma limits for X3
+paste0("3 sigma limits for X3  ",(mean(haldcement$X3) - 3 * sd(haldcement$X2)),"  ",(mean(haldcement$X3) + 3 * sd(haldcement$X3)))
+# Find 3 sigma limits for X4
+paste0("3 sigma limits for X4  ",(mean(haldcement$X4) - 3 * sd(haldcement$X4)),"  ",(mean(haldcement$X4) + 3 * sd(haldcement$X4)))
+
+# Find
+paste0("2 sigma limits of X1  ",(mean(haldcement$X1) - 2 * sd(haldcement$X1))," ",(mean(haldcement$X1) + 2 * sd(haldcement$X1)))
+# Find 2 sigma limits of X2
+paste0("2 sigma limits of X2  ",(mean(haldcement$X2) - 2 * sd(haldcement$X2)),"  ",(mean(haldcement$X2) + 2 * sd(haldcement$X2)))
+# Find 2 sigma limits for X3
+paste0("2 sigma limits for X3  ",(mean(haldcement$X3) - 2 * sd(haldcement$X3)),"  ",(mean(haldcement$X3) + 2 * sd(haldcement$X3)))
+# Find 2 sigma limits for X4
+paste0("2 sigma limits for X4  ",(mean(haldcement$X4) - 2 * sd(haldcement$X4)),"  ",(mean(haldcement$X4) + 2 * sd(haldcement$X4)))
+```
+
+## MULTICOLLINEARITY Check
+```{r echo=FALSE}
+car::vif(HC_LM_1)
+```
+
+* OBSERVATION:  SEVERE MULTICOLLINEARITY as VIF > 10 FOR ALL VARIABLES
+
+
+## Correlation Co-efficients - Pearson test
+```{r include=FALSE}
+############################## REMEDY FOR MULTICOLLINEARITY ######################
+# We can also have pearson correlation coeffcients along with p-values.
+library("Hmisc")
+haldcement_cormat <- rcorr(as.matrix(haldcement))
+# ++++++++++++++++++++++++++++
+# flattenCorrMatrix
+# ++++++++++++++++++++++++++++
+# cormat : matrix of the correlation coefficients
+# pmat : matrix of the correlation p-values
+flattenCorrMatrix <- function(cormat, pmat) {
+  ut <- upper.tri(pmat)  # ut <- upper.tri(cormat)
+  data.frame(
+    row = rownames(cormat)[row(cormat)[ut]],
+    column = rownames(cormat)[col(cormat)[ut]],
+    cor  =(cormat)[ut],
+    p = pmat[ut]
+  )
+}
+
+```
+```{r echo=FALSE,size="tiny"}
+# Actual Output
+flattenCorrMatrix(haldcement_cormat$r, haldcement_cormat$P)
+```
+
+* Test of Hypothesis (Pearson)
+  + H0: $\rho$ = 0 ; i.e No relationship between the variables.
+  + H1 : $\rho$ $\neq$ 0
+
+*  OBSERVATION:
+ + No Correllation : Accept H0 : X1,X2 (p=0.4); X2,X3 (p=0.6),X1,X4(p=0.4),X3,X4 (p=0.9)
+ + Correlation exists : Accept H1 : X1,X3 (< 0.05);X2,X4 (< 0.05)
+
+
+##  Variable Selection - Forward selection
+```{r  include = FALSE}
+###################
+#Iteration-1
+#Forward Selection
+FSR=regsubsets(Y~.,data=haldcement,method="forward")
+summary(FSR)
+Modelsummary=cbind(summary(FSR)$which,R2=summary(FSR)$rsq,SSres=summary(FSR)$rss,AdjR2=summary(FSR)$adjr2,Cp=summary(FSR)$cp,BIC=summary(FSR)$bic)
+```
+```{r echo=FALSE}
+Modelsummary
+```
+
+*  RECOMMENDATION :  X4 +X1 =97%
+
+##  Variable Selection - Backward Elimination
+```{r  include = FALSE}
+#***************************
+#Backward elimination
+BER=regsubsets(Y~.,data=haldcement,method="backward")
+Modelsummary=cbind(summary(BER)$which,R2=summary(BER)$rsq,SSres=summary(BER)$rss,AdjR2=summary(BER)$adjr2,Cp=summary(BER)$cp,BIC=summary(BER)$bic)
+```
+```{r  echo = FALSE}
+Modelsummary
+```
+
+
+*  RECOMMENDATION :  X2 + X1 = 97%
+
+
+##  Variable Selection - Stepwise Regression
+```{r  include = FALSE}
+#***************************
+#Stepwise Regression
+SWR=regsubsets(Y~.,data=haldcement,method="seqrep")
+Modelsummary=cbind(summary(SWR)$which,R2=summary(SWR)$rsq,SSres=summary(SWR)$rss,AdjR2=summary(SWR)$adjr2,Cp=summary(SWR)$cp,BIC=summary(SWR)$bic)
+
+```
+
+```{r  echo = FALSE}
+Modelsummary
+```
+
+*  RECOMMENDATION : X4+X1+X2= 97%
+
+##  Variable Selection - PCA
+```{r include=FALSE}
+haldcement_x <- haldcement[,c(-1)]
+
+#Scale the data
+res.pca <- prcomp(haldcement_x, center = FALSE, scale = TRUE)
+summary(res.pca)
+library(factoextra)
+
+
+```
+```{r echo=FALSE}
+# Contributions of variables to PC1
+fviz_contrib(res.pca, choice = "var", axes = 1, top = 10)
+```
+*  RECOMMENDATION : : PCA1: X2 and X4 ( X4 very close to X3)
+
+
+##  FINALIZING VARIABLE/MODEL selection
+
+```{r include=FALSE}
+### Model 1 - X1 + X2 - stepwise regression
+HC_LM_Model1 = lm(Y~X1+X2)
+#### Model 2 - X2 and X4  - PCA 1
+HC_LM_X2_X4 <- lm(Y~X2+X4)
+#######  Model 3 - X4 + X1
+HC_LM_X4_X1 <- lm(Y~ X4+X1 )
+######## Model 4 - X2 and X3 ( PCA1 - slightly modified as X2 and X4 are correlated)
+HC_LM_X2_X3 <- lm(Y~X2+X3)
+```
+
+```{r include=FALSE,size="tiny'"}
+PRESS(HC_LM_Model1)
+vif(HC_LM_Model1)
+summary(HC_LM_Model1)$adj.r.squared
+PRESS(HC_LM_X2_X4)
+vif(HC_LM_X2_X4)
+summary(HC_LM_X2_X4)$adj.r.squared
+PRESS(HC_LM_X4_X1)
+vif(HC_LM_X4_X1)
+summary(HC_LM_X4_X1)$adj.r.squared
+PRESS(HC_LM_X2_X3)
+vif(HC_LM_X2_X3)
+summary(HC_LM_X2_X3)$adj.r.squared
+```
+
+VAR  |PRESS |VIF|$R^{2}$(adj)| $R^{2}$(pred)|
+-----|------|---|------------|--------------|
+X1+X2|93.8  |1  |   97%      |      96%     |
+X2+X4|1461.8|18 |   61%      |      46%     |
+X4+X1|121.2 |1  |   96%      |      95%     |
+X2+X3|701.7 |1  |   81%      |      74%     |
+
+
+*  RECOMMENDATION :PRESS stat should be small ( so that R-sq(pred) is high) and VIF=1.
+ + We will go with Model 1 : X1+X2
+
+##  FINAL Model : X1 + X2 : Validation of Regression Assumptions
+```{r include=FALSE}
+################################ FINAL VARIABLE/MODEL selection ##########
+############## No clear Winner, as different model gave different combinations. Use PRESS() to break the tie.
+### Model 1 - X1 + X2 - stepwise regression
+HC_LM_Model1 = lm(Y~X1+X2)
+PRESS(HC_LM_Model1)
+vif(HC_LM_Model1)
+summary(HC_LM_Model1)$adj.r.squared
+#### Model 2 - X2 and X4  - PCA 1
+HC_LM_X2_X4 <- lm(Y~X2+X4)
+PRESS(HC_LM_X2_X4)
+vif(HC_LM_X2_X4)
+summary(HC_LM_X2_X4)$adj.r.squared
+#######  Model 3 - X4 + X1
+HC_LM_X4_X1 <- lm(Y~ X4+X1 )
+PRESS(HC_LM_X4_X1)
+vif(HC_LM_X4_X1)
+summary(HC_LM_X4_X1)$adj.r.squared
+######## Model 4 - X2 and X3 ( PCA1 - slightly modified as X2 and X4 are correlated)
+HC_LM_X2_X3 <- lm(Y~X2+X3)
+PRESS(HC_LM_X2_X3)
+vif(HC_LM_X2_X3)
+summary(HC_LM_X2_X3)$adj.r.squared
+
+######### CONCLUSION
+####### Model1 - X1+X2 : PRESS stat : 93.88255, VIF =1, Radj - 97% , R-squared (predicted) - 0.9654305
+####### Model2 -X2+X4- PCA 1 : PRESS stat : 1461.814, VIF > 18, Radj - 61%, R-squared (predicted) - 0.4617298
+###### Model 3 - X4+X1  : PRESS stat : 121.2244, VIF =1 , Radj - 96% , R-squared (predicted) - 0.9553627
+###### Model 4 - X2+X3 : PRESS stat :701.7432 , VIF =1, Radj - 81%, R-squared (predicted) - 0.7416037
+#### Since PRESS stat should be small ( so that R-sq(pred) is high), VIF=1. We will go with Model 1 : X1+X2
+################################# FINAL MODEL #################
+Model_LM_final = lm(haldcement$Y ~ X1+X2, data = haldcement )
+summary(Model_LM_final)
+####################### 1. N - Normality Significance test for Residuals.
+# H0 : Part of Normal distribution
+# H1 : Not part of normal distribution
+shapiro.test(rstandard(Model_LM_final))
+#####Result
+#Shapiro-Wilk normality test
+#data:  rstandard(Model_LM_final)
+#W = 0.90219, p-value = 0.1433
+####### We can also use Anderson-Darling test
+#H0: The data follows the normal distribution
+#H1: The data do not follow the normal distribution
+ad.test(rstandard(Model_LM_final))
+####Result
+#Anderson-Darling normality test
+#data:  rstandard(Model_LM_final)
+#A = 0.61361, p-value = 0.08628
+#########Normal Probability plot
+ors <- rstandard(Model_LM_final)
+# normal probability plot is also known as QQ plot in R ? Seems to be based on quantiles and median.. double check
+qqnorm(ors, pch = 1, frame = FALSE)
+qqline(ors, col = "steelblue", lwd = 2)
+#### RESDUALS FOLLOW NORMAL DISTRIBUTION.
+####################### 2. (E) -  HOMOSCADASTICITY TEST
+### NULL hypothesis H 0 : σ 1 2 = σ 2 2 = ... = σ n 2
+bptest(Model_LM_final)
+######Results
+#studentized Breusch-Pagan test
+#data:  Model_LM_final
+#BP = 0.16688, df = 2, p-value = 0.9199
+#### RESDUALS have EQUAL VARIANCE .. HOMOSCADASTICTY OK.
+####################### 3.  L - Linearity test - e vs X1, e vs X2
+par(mfrow=c(2,2))
+##### e vs X1
+plot(haldcement$X1,rstudent(Model_LM_final),xlab = "X1",ylab = "rstudent(ti)")
+##### e vs X2
+plot(haldcement$X2,rstudent(Model_LM_final),xlab = "X2",ylab = "rstudent(ti)")
+######### OBSERVATION : Seems to be in a band.
+####################### 4.  (I) - Independence/AUTO CORRELATION TEST
+#The Durbin-Watson (D-W) test is used for testing the hypothesis of lack of first order autocorrelation in the
+#disturbance term. The null hypothesis is
+# H0 : ρ = 0
+#positive autocorrelation of e t ’s ⇒ d < 2
+#negative autocorrelation of e t ’s ⇒ d > 2
+#zero autocorrelation of e t ’s ⇒ d ≈ 2
+durbinWatsonTest(Model_LM_final)
+#######RESULT
+#lag Autocorrelation D-W Statistic p-value
+#1     -0.05450402       1.92164   0.892
+#Alternative hypothesis: rho != 0
+######## p is high so NULL flies . INDEPENDENCE TEST PASSES. No AUTOCORRELATION issue.
+####################### FINAL MODEL  ###############
+####### Print the current Model
+Model_LM_final
+#Call:
+#  lm(formula = haldcement$Y ~ X1 + X2, data = haldcement)
+#Coefficients:
+#  (Intercept)           X1           X2
+#       52.5773       1.4683       0.6623
+# Y = 52.5773  + (1.4683) X1 + ( 0.6623) X2
+```
+
+
+* Normality test
+  + Shapiro-wilks Test - Distribution is Normal
+ - W = 0.90219, p-value = 0.1433
+  + Anderson-Darling test - Distribution is normal
+ - A = 0.61361, p-value = 0.08628
+
+
+* Equal Variance Test
+  + studentized Breusch-Pagan test
+  - BP = 0.16688, df = 2, p-value = 0.9199
+
+##  FINAL Model : X1 + X2 : Validation of Regression Assumptions (contd..)
+* Independence/Auto Correllation Test (Durbin-Watson (D-W) test )
+
+lag  | Autocorrelation | D-W Statistic | p-value
+-----|-----------------|---------------|--------
+1   | -0.05450402     |  1.92164      | 0.892
+
+
+* Linearity test
+  + Box-Tidwell test (Y,X1)
+  +  MLE of lambda Score Statistic (z) Pr(>|z|)
+  +       0.23145             -0.7366   0.4614
+  + Box-Tidwell test ( Y,X2)
+  + MLE of lambda Score Statistic (z) Pr(>|z|)
+  +   -0.71695               -1.35    0.177

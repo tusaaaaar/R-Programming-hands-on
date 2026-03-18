@@ -1,0 +1,185 @@
+---
+title: "Assignment-6"
+author: "Tushar Sharma"
+format: pdf
+editor: visual
+---
+
+## Reading a CSV File in R
+
+```{r}
+list.files()
+fertility <- read.csv("bd-dec22-age-specific-fertility-rates.csv")
+print(fertility)
+```
+
+### View Basic Structure
+
+```{r}
+head(fertility)
+```
+
+```{r}
+tail(fertility)
+```
+
+```{r}
+str(fertility)
+```
+
+```{r}
+dim(fertility)
+```
+
+```{r}
+print(is.data.frame(fertility))
+print(nrow(fertility))
+print(ncol(fertility))
+```
+
+### Summary Statistics
+
+```{r}
+summary(fertility)
+```
+
+#### Handling Missing Values
+
+```{r}
+sum(is.na(fertility))
+
+#missing value per column
+colSums(is.na(fertility))
+```
+
+## LearningLoading other data set also
+
+```{r}
+orders <- read.csv("orders_jan.csv")
+print(orders)
+```
+
+```{r}
+library(dplyr)
+
+orders <- orders %>%
+  mutate(Total_Sales = quantity * order_amount)
+
+head(orders)
+```
+
+### Total reveneue
+
+```{r}
+sum(orders$order_amount, na.rm = TRUE)
+```
+
+### Top 20 highest value order
+
+```{r}
+orders %>%
+  arrange(desc(order_amount)) %>%
+  head(20)
+```
+
+### Total sales by Country
+
+```{r}
+orders %>%
+  group_by(country) %>%
+  summarise(Product_Sales = sum(order_amount, na.rm = TRUE)) %>%
+  arrange(desc(Product_Sales))
+```
+
+### Total order by customer
+
+```{r}
+orders %>%
+  count(customer_id) %>%
+  arrange(desc(n))
+```
+
+### Average order value
+
+```{r}
+mean(orders$order_amount, na.rm = TRUE)
+```
+
+## Filtering Data
+
+### Orders above 10000
+
+```{r}
+orders %>%
+  filter(order_amount>10000)
+```
+
+### Orders for Specific Country
+
+```{r}
+orders %>%
+  filter(country == "india")
+```
+
+## Sorting Data
+
+```{r}
+# Sort by Quantity descending
+orders %>%
+  arrange(desc(quantity))
+```
+
+## Vizualization
+
+```{r}
+library(ggplot2)
+
+# Sales by country
+ggplot(orders, aes(x = country, y = order_amount)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+# Quantity distribution
+ggplot(orders, aes(x = quantity)) +
+  geom_histogram(fill = "orange", bins = 10)
+```
+
+### Writing to New CSV
+
+```{r}
+# Save high value orders
+high_value <- orders %>%
+  filter(order_amount > 10000)
+
+write.csv(high_value, "high_value_orders.csv", row.names = FALSE)
+```
+
+## Converting to Tibble
+
+```{r}
+library(tidyverse)
+
+orders_tbl <- as_tibble(orders)
+
+glimpse(orders_tbl)
+```
+
+## Using readr Instead of base R
+
+```{r}
+library(readr)
+
+orders_readr <- read_csv("orders_jan.csv")
+
+spec(orders_readr)
+```
+
+```{r}
+library(purrr)
+
+orders %>%
+  select(where(is.numeric)) %>%
+  map_dbl(mean, na.rm = TRUE)
+```

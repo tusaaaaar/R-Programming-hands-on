@@ -1,0 +1,188 @@
+---
+title: "Assignment-9"
+format: html
+editor: visual
+---
+
+## Principal Component Analysis (PCA) using Hald Cement Dataset
+
+### Objective
+
+1.  To understand Principal Component Analysis (PCA).
+
+2.  To reduce dimensionality of correlated variables.
+
+3.  To identify principal components explaining maximum variance.
+
+4.  To visualize relationships between variables using PCA plots.
+
+# Dataset
+
+Hald Cement Dataset
+
+Variables used in the dataset:
+
+| Variable | Description                   |
+|----------|-------------------------------|
+| X1       | Tricalcium aluminate          |
+| X2       | Tricalcium silicate           |
+| X3       | Tetracalcium aluminoferrite   |
+| X4       | Dicalcium silicate            |
+| Y        | Heat evolved during hardening |
+
+For PCA we will analyze only the predictor variables **X1, X2, X3, X4**.
+
+```{r}
+library(corrplot)
+library(factoextra)
+library(GGally)
+```
+
+### Loading Data Set
+
+```{r}
+setwd("D:/Sem-2/R-/7,8,9,10/7")
+data<-read.csv("BEST-Hald Cement data.csv")
+print(data)
+```
+
+```{r}
+str(data)
+summary(data)
+```
+
+```{r}
+cor(data)
+```
+
+### Select Predictor Variable
+
+PCA Should only be applied to predictor Variables
+
+```{r}
+predictors <- data[,c("X1","X2","X3","X4")]
+```
+
+### Scatterplot Matrix
+
+```{r}
+pairs(predictors,
+main="Scatterplot Matrix of Cement Variables")
+```
+
+### Correlation Matrix
+
+```{r}
+cor_matrix <- cor(predictors)
+
+cor_matrix
+```
+
+### Correlation Heatmap
+
+```{r}
+corrplot(cor_matrix,
+method="color",
+type="upper",
+tl.col="black",
+tl.srt=45)
+```
+
+### Standardize Varialbles
+
+-   PCA requires Variables to be standardized
+
+```{r}
+scaled_data <- scale(predictors)
+```
+
+### Doing PCA now
+
+```{r}
+pca_model <- prcomp(scaled_data)
+
+summary(pca_model)
+```
+
+-   Eigen values here represents the variance explained by each principle component
+
+```{r}
+pca_model$sdev^2
+```
+
+### shows how each variable contributes to component
+
+-   PCA Loading
+
+    ```{r}
+    pca_model$rotation
+    ```
+
+### Screen Plot
+
+```{r}
+plot(pca_model,
+type="l",
+main="Scree Plot")
+```
+
+### Eigenvalue Visualization
+
+```{r}
+fviz_eig(pca_model,
+addlabels=TRUE)
+```
+
+### Variable Contribution PLot
+
+```{r}
+fviz_pca_var(pca_model,
+col.var="contrib")
+```
+
+```{r}
+summary(pca_model)$importance
+```
+
+### Observation Plot
+
+```{r}
+fviz_pca_ind(pca_model)
+```
+
+### Extracting Principal Components
+
+```{r}
+pc_scores <- pca_model$x
+
+head(pc_scores)
+```
+
+### Visualizing first two components
+
+```{r}
+plot(pc_scores[,1],
+pc_scores[,2],
+xlab="PC1",
+ylab="PC2",
+main="Principal Component Space")
+```
+
+```{r}
+var_explained <- pca_model$sdev^2 / sum(pca_model$sdev^2)
+
+plot(cumsum(var_explained),
+     type="b",
+     xlab="Principal Components",
+     ylab="Cumulative Variance Explained",
+     main="Cumulative Variance Plot")
+```
+
+## Relation ship betwwn PC1 and target variable
+
+```{r}
+plot(pc_scores[,1], data$Y,
+     xlab="PC1",
+     ylab="Heat (Y)",
+     main="PC1 vs Heat Evolution")
+```

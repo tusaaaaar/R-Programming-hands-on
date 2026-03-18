@@ -1,0 +1,424 @@
+---
+title: "Assignment-4"
+author: "Tushar Sharma"
+format: pdf
+editor: visual
+---
+
+```{r}
+library(ggplot2)
+```
+
+```{r}
+ggplot(data=mpg)+
+  geom_point(mapping=aes(x=displ,y=hwy))
+```
+
+```{r}
+ggplot(data = mpg) +
+geom_point(mapping = aes(x = displ, y = hwy, color = class))
+```
+
+```{r}
+ggplot(data = mpg) +
+geom_point(mapping = aes(x = displ, y = hwy, size = class))
+```
+
+```{r}
+# Top
+ggplot(data = mpg) +
+geom_point(mapping = aes(x = displ, y = hwy, alpha = class))
+
+```
+
+```{r}
+# Bottom
+ggplot(data = mpg) +
+geom_point(mapping = aes(x = displ, y = hwy, shape = class))
+
+```
+
+#### Can also set the aesthetic properties of your geom manually.
+
+```{r}
+ggplot(data = mpg) +
+geom_point(mapping = aes(x = displ, y = hwy), color = "green",shape=23)
+```
+
+## Facets
+
+-   useful for categorical variables
+
+-   Is to split your plot into facets
+
+-   subplots that each display one subset of the data.
+
+```{r}
+ggplot(data = mpg) +
+geom_point(mapping = aes(x = displ, y = hwy)) +
+facet_wrap(~ class, nrow = 2)
+```
+
+#### To facet your plot on the combination of two variables, add
+
+facet_grid() to your plot call. The first argument of facet_grid() is also a formula.
+
+```{r}
+ggplot(data = mpg) +
+geom_point(mapping = aes(x = displ, y = hwy)) +
+facet_grid(drv ~ cyl)
+```
+
+## Geometric Objects
+
+```{r}
+ggplot(data = mpg) +
+geom_point(mapping = aes(x = displ, y = hwy))
+```
+
+```{r}
+ggplot(data = mpg) +
+geom_smooth(mapping = aes(x = displ, y = hwy))
+```
+
+### Both together.
+
+```{r}
+ggplot(data = mpg) +
+geom_point(mapping = aes(x = displ, y = hwy)) +
+geom_smooth(mapping = aes(x = displ, y = hwy))
+```
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+geom_point(mapping = aes(color = class , shape = class)) +
+geom_smooth()
+```
+
+```{r}
+ggplot(data = mpg) +
+geom_smooth(mapping = aes(x = displ, y = hwy, group = drv))
+
+```
+
+```{r}
+ggplot(data = mpg) +
+geom_smooth(
+mapping = aes(x = displ, y = hwy, color = drv),
+show.legend = FALSE
+)
+```
+
+#### Our smooth line displays just a subset of the mpg dataset, the
+
+subcompact cars. The local data argument in geom_smooth() over rides the global data argument in ggplot() for that layer only:
+
+```{r}
+
+library(dplyr)
+```
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+ geom_point(mapping = aes(color = class)) +
+ geom_smooth(
+ data = filter(mpg, class == "subcompact"),
+ se = FALSE
+ )
+```
+
+#### Statistical Transformations
+
+```{r}
+ggplot(data = diamonds) +
+geom_bar(mapping = aes(x = cut))
+```
+
+```{r}
+demo <- tribble(
+~a,      
+~b,
+"bar_1", 20,
+"bar_2", 30,
+"bar_3", 40
+)
+ggplot(data = demo) +
+geom_bar(
+mapping = aes(x = a, y = b), stat = "identity"
+)
+```
+
+```{r}
+ggplot(data = diamonds) +
+stat_summary(
+mapping = aes(x = cut, y = depth),
+fun.ymin = min,
+fun.ymax = max,
+fun.y = median
+)
+```
+
+```{r}
+ggplot(data = diamonds) +
+geom_bar(mapping = aes(x = cut, y = ..prop..))
+ggplot(data = diamonds) +
+geom_bar(
+mapping = aes(x = cut, fill = color, y = ..prop..)
+)
+```
+
+```{r}
+#Position Adjustments
+ggplot(data = diamonds) +
+geom_bar(mapping = aes(x = cut, color = cut))
+```
+
+```{r}
+ggplot(data = diamonds) +
+geom_bar(mapping = aes(x = cut, fill = cut))
+```
+
+```{r}
+#the bars are automatically stacked. Each colored rectangle represents a combination of cut and clarity:
+ggplot(data = diamonds) +
+geom_bar(mapping = aes(x = cut, fill = clarity))
+
+```
+
+```{r}
+#position = "dodge" places overlapping objects directly beside one another.
+ggplot(data = diamonds) +
+geom_bar(
+mapping = aes(x = cut, fill = clarity),
+position = "dodge"
+)
+```
+
+### Cordinate Systems
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = class, y = hwy)) +
+geom_boxplot()
+```
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = class, y = hwy)) +
+geom_boxplot() +
+coord_flip()
+```
+
+```{r}
+bar <- ggplot(data = diamonds) +
+geom_bar(
+mapping = aes(x = cut, fill = cut),
+show.legend = FALSE,
+width = 1
+) +
+theme(aspect.ratio = 1) +
+labs(x = NULL, y = NULL)
+
+```
+
+```{r}
+
+bar + coord_flip()
+```
+
+```{r}
+bar + coord_polar()
+```
+
+# Working on ***txhousing*** dataset
+
+```{r}
+
+library(dplyr)
+
+data(txhousing)
+head(txhousing)
+
+```
+
+```{r}
+tx_clean <- na.omit(txhousing)
+```
+
+### trend over time
+
+```{r}
+#meadian house price overtime
+ggplot(tx_clean, aes(x = date, y = median)) +
+  stat_summary(fun = mean, geom = "line", color = "blue", linewidth = 1) +
+  labs(
+    title = "Average Median House Price in Texas Over Time",
+    x = "Year",
+    y = "Average Median Price"
+  )
+
+```
+
+### Compare cites
+
+-   each line represents a city
+-   compare trends across cities
+
+```{r}
+top_cities <- tx_clean |>
+  dplyr::count(city, sort = TRUE) |>
+  head(6) |>
+  dplyr::pull(city)
+
+ggplot(
+  dplyr::filter(tx_clean, city %in% top_cities),
+  aes(x = date, y = sales, color = city)
+) +
+  geom_line(linewidth = 1) +
+  labs(
+    title = "Housing Sales Trend in Major Texas Cities",
+    x = "Year",
+    y = "Sales"
+  )
+
+```
+
+### Histogram -Distribution of a numeric variable
+
+```{r}
+ggplot(tx_clean, aes(x = median)) +
+  geom_histogram(binwidth = 10000, fill = "skyblue", color = "black") +
+  labs(
+    title = "Distribution of Median House Prices",
+    x = "Median House Price",
+    y = "Count"
+  )
+
+```
+
+### Box Plot -meadian price by year
+
+-   market variablity , shows how house price vary within each year.
+
+```{r}
+ggplot(tx_clean, aes(x = factor(year), y = median)) +
+  geom_boxplot(fill = "skyblue") +
+  labs(
+    title = "Distribution of Median House Prices by Year",
+    x = "Year",
+    y = "Median House Price"
+  )
+```
+
+### Sales by city
+
+-compares sales variability acrooss big cities (visaulixe which cities are more stable )
+
+```{r}
+top_cities <- tx_clean %>%
+  count(city, sort = TRUE) %>%
+  head(6) %>%
+  pull(city)
+
+ggplot(filter(tx_clean, city %in% top_cities),
+       aes(x = city, y = sales)) +
+  geom_boxplot(fill = "lightgreen") +
+  labs(
+    title = "Sales Distribution in Major Texas Cities",
+    x = "City",
+    y = "Sales"
+  )
+```
+
+### Inventory by Year -helps understand how housing supply changed year wise -high spread = unstable market
+
+```{r}
+ggplot(tx_clean, aes(x = factor(year), y = inventory)) +
+  geom_boxplot(fill = "orange") +
+  labs(
+    title = "Housing Inventory Distribution by Year",
+    x = "Year",
+    y = "Inventory"
+  )
+```
+
+### Average sale over time - high level trend of overall market activity
+
+```{r}
+ggplot(tx_clean, aes(x = date, y = sales)) +
+  stat_summary(fun = mean, geom = "line", color = "blue", linewidth = 1) +
+  labs(
+    title = "Average Housing Sales Trend in Texas",
+    x = "Year",
+    y = "Average Sales"
+  )
+```
+
+### Sales distribution -shows low or high sales for months
+
+```{r}
+ggplot(tx_clean, aes(x = sales)) +
+  geom_histogram(fill = "steelblue", color = "black", bins = 30) +
+  labs(
+    title = "Distribution of Housing Sales",
+    x = "Sales",
+    y = "Count"
+  )
+```
+
+### Mesian Price Distribution
+
+-smooth view of price distribution -looks better than histogram for pattern recognition
+
+```{r}
+ggplot(tx_clean, aes(x = median)) +
+  geom_density(fill = "purple", alpha = 0.4) +
+  labs(
+    title = "Density of Median House Prices",
+    x = "Median Price"
+  )
+```
+
+### scatter Plot
+
+-   Show how pricing affects sales volume
+-   over all relationship
+
+```{r}
+ggplot(tx_clean, aes(x = median, y = sales)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(se = FALSE, color = "red") +
+  labs(
+    title = "Relationship Between House Prices and Sales",
+    x = "Median Price",
+    y = "Sales"
+  )
+```
+
+### sales trends by city
+
+-each city has its own clean panel
+
+```{r}
+
+ggplot(filter(tx_clean, city %in% top_cities),
+       aes(x = date, y = sales)) +
+  geom_line(color = "darkgreen") +
+  facet_wrap(~ city, scales = "free_y") +
+  labs(
+    title = "Sales Trends in Major Texas Cities",
+    x = "Year",
+    y = "Sales"
+  )
+```
+
+### Average invetory by city -housing supply city-wise -helps in long terms avaibality
+
+```{r}
+ggplot(tx_clean, aes(x = city, y = inventory)) +
+  stat_summary(fun = mean, geom = "bar", fill = "brown") +
+  labs(
+    title = "Average Housing Inventory by City",
+    x = "City",
+    y = "Average Inventory"
+  ) +
+  theme(axis.text.x = element_text(angle = 90))
+```
